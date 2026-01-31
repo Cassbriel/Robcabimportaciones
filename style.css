@@ -142,13 +142,13 @@ h3 {
 /* Search Bar Main */
 .search-bar-main {
     flex: 1;
-    max-width: 600px;
+    max-width: 800px;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-color);
     border-radius: 30px;
-    padding: 8px 15px;
+    padding: 10px 20px;
     transition: var(--transition);
 }
 

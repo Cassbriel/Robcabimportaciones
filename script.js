@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Contact Modal Logic
     const contactModal = document.getElementById('contact-modal');
     const closeContactModalBtn = document.getElementById('close-contact-modal');
-    const cotizarBtns = document.querySelectorAll('a[href="#cotizar"]');
+    const cotizarBtns = document.querySelectorAll('a[href="#cotizar"], .btn-cotizar');
 
     if (contactModal && closeContactModalBtn) {
         // Open Modal when clicking "Cotizar Ahora" buttons
