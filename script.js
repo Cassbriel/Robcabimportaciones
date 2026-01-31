@@ -123,6 +123,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Auth State
+    let currentUser = null; // 'hector' or 'admin'
+
+    // Load Admin Credentials from LocalStorage
+    const getAdminCreds = () => {
+        const saved = localStorage.getItem('robcab-admin-cfg');
+        return saved ? JSON.parse(saved) : { user: 'admin', pass: 'admin123' };
+    };
+
+    // Sync admin label on load
+    const initialCreds = getAdminCreds();
+    const displayUserLabel = document.getElementById('display-admin-username');
+    if (displayUserLabel) displayUserLabel.textContent = initialCreds.user.toUpperCase();
+
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -131,23 +145,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const username = usernameInput.value;
             const password = passwordInput.value;
+            const adminCreds = getAdminCreds();
 
             // Superadmin Credentials Check
             if (username === 'Hector' && password === 'Cassiel') {
-                showToast('Acceso Concedido', 'Bienvenido de nuevo, Hector.', 'success');
-                closeModal();
-                loginForm.reset();
-                const adminPanelElement = document.getElementById('admin-panel');
-                if (adminPanelElement) {
-                    adminPanelElement.classList.add('active');
-                }
-            } else {
+                currentUser = 'hector';
+                showToast('Acceso Superadmin', 'Bienvenido, Héctor. Control total activado.', 'success');
+                enterAdminPanel();
+            }
+            // Standard Admin Credentials Check
+            else if (username === adminCreds.user && password === adminCreds.pass) {
+                currentUser = 'admin';
+                showToast('Acceso Administrador', `Bienvenido, ${username}.`, 'success');
+                enterAdminPanel();
+            }
+            else {
                 showToast('Error de Acceso', 'Usuario o contraseña incorrectos.', 'warning');
-                // Shake effect for feedback
                 loginForm.classList.add('shake');
                 setTimeout(() => loginForm.classList.remove('shake'), 500);
             }
         });
+    }
+
+    function enterAdminPanel() {
+        closeModal();
+        loginForm.reset();
+        const adminPanelElement = document.getElementById('admin-panel');
+        if (adminPanelElement) {
+            adminPanelElement.classList.add('active');
+
+            // Toggle Superadmin-only UI
+            const superadminControls = document.getElementById('superadmin-only-controls');
+            const standardView = document.getElementById('standard-admin-view');
+
+            if (currentUser === 'hector') {
+                if (superadminControls) superadminControls.style.display = 'block';
+                // if (standardView) standardView.style.display = 'none';
+            } else {
+                if (superadminControls) superadminControls.style.display = 'none';
+                // if (standardView) standardView.style.display = 'block';
+            }
+
+            // Sync current admin info to inputs if Hector
+            const adminCreds = getAdminCreds();
+            const manageUser = document.getElementById('manage-admin-user');
+            const managePass = document.getElementById('manage-admin-pass');
+            const displayUserLabel = document.getElementById('display-admin-username');
+
+            if (manageUser) manageUser.value = adminCreds.user;
+            if (managePass) managePass.value = adminCreds.pass;
+            if (displayUserLabel) displayUserLabel.textContent = adminCreds.user.toUpperCase();
+        }
     }
 
     // Admin Panel Logic (Professional Version)
@@ -357,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     logoutModal.style.display = 'none';
                     adminPanel.classList.remove('active');
+                    currentUser = null; // Clear session
                     if (sidebarItems[0]) sidebarItems[0].click();
                 }, 300);
             });
@@ -703,6 +752,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (searchBtn) {
         searchBtn.addEventListener('click', updateSearch);
+    }
+
+    // Managed Admin Credentials Save (Hector Only)
+    const saveAdminCredsBtn = document.getElementById('save-admin-creds');
+    if (saveAdminCredsBtn) {
+        saveAdminCredsBtn.addEventListener('click', () => {
+            const newUser = document.getElementById('manage-admin-user').value;
+            const newPass = document.getElementById('manage-admin-pass').value;
+
+            if (newUser && newPass) {
+                localStorage.setItem('robcab-admin-cfg', JSON.stringify({ user: newUser, pass: newPass }));
+                const displayUserLabel = document.getElementById('display-admin-username');
+                if (displayUserLabel) displayUserLabel.textContent = newUser.toUpperCase();
+
+                showToast('Éxito', 'Credenciales de Administrador actualizadas.', 'success');
+            } else {
+                showToast('Error', 'El usuario y contraseña no pueden estar vacíos.', 'warning');
+            }
+        });
     }
 
     // Toast System

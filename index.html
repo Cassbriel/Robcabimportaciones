@@ -615,28 +615,40 @@
                                 </div>
                             </div>
 
-                            <!-- User Card 2 -->
-                            <div class="user-card">
+                            <!-- managed Admin Account Card -->
+                            <div class="user-card" id="managed-admin-card">
                                 <div class="user-card-header">
-                                    <img src="https://ui-avatars.com/api/?name=Juan+Ventas&background=30363d&color=fff"
+                                    <img src="https://ui-avatars.com/api/?name=Admin+General&background=30363d&color=fff"
                                         alt="User">
                                     <div class="user-info">
-                                        <h4>Juan Ventas</h4>
-                                        <p>juan@robcab.com</p>
+                                        <h4 id="display-admin-username">Admin General</h4>
+                                        <p>Acceso Estándar</p>
                                     </div>
-                                    <span class="badge info">Vendedor</span>
+                                    <span class="badge info">Administrador</span>
                                 </div>
-                                <div class="user-permissions">
+                                <div class="user-permissions managed-creds" id="superadmin-only-controls"
+                                    style="display: none;">
+                                    <h5>Gestionar Acceso (Solo Superadmin):</h5>
+                                    <div class="form-group" style="margin-top: 10px;">
+                                        <label style="font-size: 0.8em; color: #7d8590;">Nuevo Usuario</label>
+                                        <input type="text" id="manage-admin-user" value="admin"
+                                            style="padding: 8px; font-size: 0.9em;">
+                                    </div>
+                                    <div class="form-group" style="margin-top: 5px;">
+                                        <label style="font-size: 0.8em; color: #7d8590;">Nueva Contraseña</label>
+                                        <input type="password" id="manage-admin-pass" value="admin123"
+                                            style="padding: 8px; font-size: 0.9em;">
+                                    </div>
+                                    <button class="btn-primary-small" id="save-admin-creds"
+                                        style="margin-top: 10px; width: 100%;">Actualizar Acceso</button>
+                                </div>
+                                <div class="user-permissions" id="standard-admin-view">
                                     <h5>Permisos:</h5>
                                     <div class="permission-tags">
-                                        <span><i class="fa-solid fa-check"></i> Pedidos</span>
                                         <span><i class="fa-solid fa-check"></i> Inventario</span>
-                                        <span class="disabled"><i class="fa-solid fa-xmark"></i> Configuración</span>
+                                        <span><i class="fa-solid fa-check"></i> Pedidos</span>
+                                        <span class="disabled"><i class="fa-solid fa-xmark"></i> Gestión Usuarios</span>
                                     </div>
-                                </div>
-                                <div class="user-actions">
-                                    <button class="btn-text">Gestionar Rol</button>
-                                    <button class="btn-text delete">Eliminar</button>
                                 </div>
                             </div>
 
