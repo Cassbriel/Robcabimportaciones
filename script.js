@@ -126,14 +126,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            if (username) {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            // Superadmin Credentials Check
+            if (username === 'Hector' && password === 'Cassiel') {
+                showToast('Acceso Concedido', 'Bienvenido de nuevo, Hector.', 'success');
                 closeModal();
                 loginForm.reset();
                 const adminPanelElement = document.getElementById('admin-panel');
                 if (adminPanelElement) {
                     adminPanelElement.classList.add('active');
                 }
+            } else {
+                showToast('Error de Acceso', 'Usuario o contraseña incorrectos.', 'warning');
+                // Shake effect for feedback
+                loginForm.classList.add('shake');
+                setTimeout(() => loginForm.classList.remove('shake'), 500);
             }
         });
     }
