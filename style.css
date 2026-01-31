@@ -198,7 +198,7 @@ h3 {
 
 .nav-icons {
     display: flex;
-    gap: 25px;
+    gap: 20px;
     align-items: center;
 }
 
@@ -211,6 +211,26 @@ h3 {
 .nav-icon:hover {
     color: var(--highlight);
     transform: scale(1.1);
+}
+
+.btn-cotizar {
+    background: var(--highlight);
+    color: #000;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    transition: var(--transition);
+    border: 2px solid var(--highlight);
+    white-space: nowrap;
+}
+
+.btn-cotizar:hover {
+    background: transparent;
+    color: var(--highlight);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(218, 165, 32, 0.3);
 }
 
 .nav-links {
