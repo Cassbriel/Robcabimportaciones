@@ -1222,6 +1222,12 @@ footer {
     top: 50%;
     transform: translateY(-50%);
     color: var(--highlight);
+    transition: var(--transition);
+}
+
+.input-group i.toggle-password:hover {
+    color: #fff;
+    opacity: 1 !important;
 }
 
 .input-group input {

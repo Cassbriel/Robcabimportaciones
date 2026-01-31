@@ -129,11 +129,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Admin Credentials from LocalStorage
     const getAdminCreds = () => {
         const saved = localStorage.getItem('robcab-admin-cfg');
-        return saved ? JSON.parse(saved) : {
+        const defaultCreds = {
             user: 'admin',
             pass: 'admin123',
             permissions: ['inventory', 'orders']
         };
+        if (!saved) return defaultCreds;
+
+        try {
+            const parsed = JSON.parse(saved);
+            // Ensure permissions exist to prevent crash
+            if (!parsed.permissions) parsed.permissions = defaultCreds.permissions;
+            return parsed;
+        } catch (e) {
+            return defaultCreds;
+        }
     };
 
     // Sync admin info on load
@@ -166,6 +176,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     syncAdminDisplay();
+
+    // Password Visibility Toggle
+    const togglePasswordBtn = document.getElementById('toggle-password-btn');
+    const passwordField = document.getElementById('password');
+
+    if (togglePasswordBtn && passwordField) {
+        togglePasswordBtn.addEventListener('click', () => {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            // Toggle Icon
+            togglePasswordBtn.classList.toggle('fa-eye');
+            togglePasswordBtn.classList.toggle('fa-eye-slash');
+        });
+    }
 
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
