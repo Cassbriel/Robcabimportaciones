@@ -130,9 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (username) {
                 closeModal();
                 loginForm.reset();
-                const adminPanel = document.getElementById('admin-panel');
-                if (adminPanel) {
-                    adminPanel.classList.add('active');
+                const adminPanelElement = document.getElementById('admin-panel');
+                if (adminPanelElement) {
+                    adminPanelElement.classList.add('active');
                 }
             }
         });
@@ -173,6 +173,108 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        // Hero Background Upload Logic
+        const bgTrigger = document.getElementById('admin-hero-bg-trigger');
+        const bgInput = document.getElementById('admin-hero-bg-input');
+        const bgStatus = document.getElementById('admin-hero-bg-status');
+        let selectedBgData = null;
+
+        if (bgTrigger && bgInput) {
+            bgTrigger.addEventListener('click', () => bgInput.click());
+
+            bgInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        selectedBgData = event.target.result;
+                        bgStatus.textContent = `Imagen seleccionada: ${file.name}`;
+                        showToast('Imagen Lista', 'Pulsa "Confirmar Cambios" para aplicar.', 'info');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Sync Function Creator
+        const createSyncFunction = () => {
+            return () => {
+                // 1. Hero Content
+                const heroSubtitle = document.getElementById('hero-subtitle-text');
+                const heroTitle = document.getElementById('hero-main-title');
+                const heroDesc = document.getElementById('hero-description-text');
+
+                const adminHeroSubtitle = document.getElementById('admin-hero-subtitle');
+                const adminHeroTitle = document.getElementById('admin-hero-title');
+                const adminHeroDesc = document.getElementById('admin-hero-desc');
+
+                if (heroSubtitle && adminHeroSubtitle) heroSubtitle.textContent = adminHeroSubtitle.value;
+                if (heroTitle && adminHeroTitle) {
+                    const titleVal = adminHeroTitle.value;
+                    if (titleVal.includes('2026')) {
+                        heroTitle.innerHTML = titleVal.replace('2026', '<span class="highlight">2026</span>');
+                    } else {
+                        heroTitle.textContent = titleVal;
+                    }
+                }
+                if (heroDesc && adminHeroDesc) heroDesc.textContent = adminHeroDesc.value;
+
+                // Background Sync
+                if (selectedBgData) {
+                    const heroSection = document.getElementById('hero');
+                    if (heroSection) {
+                        heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${selectedBgData})`;
+                    }
+                }
+
+                // 2. Announcement Bar
+                const annBar = document.getElementById('top-announcement');
+                const annContent = document.getElementById('announcement-content');
+                const adminAnnToggle = document.getElementById('admin-topbar-toggle');
+                const adminAnnText = document.getElementById('admin-topbar-text');
+
+                if (annBar && adminAnnToggle) {
+                    if (adminAnnToggle.checked) {
+                        annBar.style.display = 'block';
+                        document.body.classList.add('has-announcement');
+                    } else {
+                        annBar.style.display = 'none';
+                        document.body.classList.remove('has-announcement');
+                    }
+                }
+                if (annContent && adminAnnText) {
+                    annContent.innerHTML = `<i class="fa-solid fa-bolt"></i> ${adminAnnText.value}`;
+                }
+
+                // 3. Vendors Sync (Loops through 4 vendors)
+                for (let i = 1; i <= 4; i++) {
+                    const adminName = document.getElementById(`vendor${i}-name`);
+                    const adminRole = document.getElementById(`vendor${i}-role`);
+                    const adminPhone = document.getElementById(`vendor${i}-phone`);
+
+                    const labelName = document.getElementById(`vendor-name-label-${i}`);
+                    const labelRole = document.getElementById(`vendor-role-label-${i}`);
+                    const labelPhone = document.getElementById(`vendor-phone-label-${i}`);
+                    const linkCard = document.getElementById(`vendor-link-${i}`);
+                    const imgElem = document.getElementById(`vendor-img-${i}`);
+
+                    if (adminName && labelName) labelName.textContent = adminName.value;
+                    if (adminRole && labelRole) labelRole.textContent = adminRole.value;
+                    if (adminPhone && labelPhone) labelPhone.textContent = `+${adminPhone.value}`;
+
+                    if (adminName && imgElem) {
+                        imgElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(adminName.value)}&background=25D366&color=fff`;
+                    }
+
+                    if (adminPhone && linkCard) {
+                        linkCard.href = `https://wa.me/${adminPhone.value.replace(/\s+/g, '')}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+                    }
+                }
+            };
+        };
+
+        const syncChanges = createSyncFunction();
+
         // Confirm All Changes Button Logic
         const confirmAllBtn = document.getElementById('confirm-all-changes');
         if (confirmAllBtn) {
@@ -182,74 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmAllBtn.style.pointerEvents = 'none';
                 confirmAllBtn.style.opacity = '0.8';
 
-                // Real Sync Logic
-                const syncChanges = () => {
-                    // 1. Hero Content
-                    const heroSubtitle = document.getElementById('hero-subtitle-text');
-                    const heroTitle = document.getElementById('hero-main-title');
-                    const heroDesc = document.getElementById('hero-description-text');
-
-                    const adminHeroSubtitle = document.getElementById('admin-hero-subtitle');
-                    const adminHeroTitle = document.getElementById('admin-hero-title');
-                    const adminHeroDesc = document.getElementById('admin-hero-desc');
-
-                    if (heroSubtitle && adminHeroSubtitle) heroSubtitle.textContent = adminHeroSubtitle.value;
-                    if (heroTitle && adminHeroTitle) {
-                        const titleVal = adminHeroTitle.value;
-                        if (titleVal.includes('2026')) {
-                            heroTitle.innerHTML = titleVal.replace('2026', '<span class="highlight">2026</span>');
-                        } else {
-                            heroTitle.textContent = titleVal;
-                        }
-                    }
-                    if (heroDesc && adminHeroDesc) heroDesc.textContent = adminHeroDesc.value;
-
-                    // 2. Announcement Bar
-                    const annBar = document.getElementById('top-announcement');
-                    const annContent = document.getElementById('announcement-content');
-                    const adminAnnToggle = document.getElementById('admin-topbar-toggle');
-                    const adminAnnText = document.getElementById('admin-topbar-text');
-
-                    if (annBar && adminAnnToggle) {
-                        if (adminAnnToggle.checked) {
-                            annBar.style.display = 'block';
-                            document.body.classList.add('has-announcement');
-                        } else {
-                            annBar.style.display = 'none';
-                            document.body.classList.remove('has-announcement');
-                        }
-                    }
-                    if (annContent && adminAnnText) {
-                        annContent.innerHTML = `<i class="fa-solid fa-bolt"></i> ${adminAnnText.value}`;
-                    }
-
-                    // 3. Vendors Sync (Loops through 4 vendors)
-                    for (let i = 1; i <= 4; i++) {
-                        const adminName = document.getElementById(`vendor${i}-name`);
-                        const adminRole = document.getElementById(`vendor${i}-role`);
-                        const adminPhone = document.getElementById(`vendor${i}-phone`);
-
-                        const labelName = document.getElementById(`vendor-name-label-${i}`);
-                        const labelRole = document.getElementById(`vendor-role-label-${i}`);
-                        const labelPhone = document.getElementById(`vendor-phone-label-${i}`);
-                        const linkCard = document.getElementById(`vendor-link-${i}`);
-                        const imgElem = document.getElementById(`vendor-img-${i}`);
-
-                        if (adminName && labelName) labelName.textContent = adminName.value;
-                        if (adminRole && labelRole) labelRole.textContent = adminRole.value;
-                        if (adminPhone && labelPhone) labelPhone.textContent = `+${adminPhone.value}`;
-
-                        if (adminName && imgElem) {
-                            imgElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(adminName.value)}&background=25D366&color=fff`;
-                        }
-
-                        if (adminPhone && linkCard) {
-                            linkCard.href = `https://wa.me/${adminPhone.value.replace(/\s+/g, '')}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
-                        }
-                    }
-                };
-
-                // Simulate saving delay and Apply changes
                 setTimeout(() => {
                     syncChanges();
                     showToast('Éxito', 'Todos los cambios han sido aplicados correctamente.', 'success');
@@ -296,13 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (confirmLogoutBtn) {
             confirmLogoutBtn.addEventListener('click', () => {
-                // Close Modal
                 logoutModal.style.opacity = '0';
                 setTimeout(() => {
                     logoutModal.style.display = 'none';
-                    // Close Admin Panel
                     adminPanel.classList.remove('active');
-                    // Reset to dashboard for next login
                     if (sidebarItems[0]) sidebarItems[0].click();
                 }, 300);
             });
@@ -324,22 +355,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (notifBtn && notifDropdown) {
             notifBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent closing immediately
+                e.stopPropagation();
                 notifDropdown.classList.toggle('active');
-
-                // Hide badge on open
                 if (notifDropdown.classList.contains('active') && notifBadge) {
                     notifBadge.style.display = 'none';
                 }
             });
 
-            // Close when clicking outside
             document.addEventListener('click', (e) => {
                 if (!notifBtn.contains(e.target)) {
                     notifDropdown.classList.remove('active');
                 }
             });
         }
+
+        // Link Generic Buttons to Toasts
+        const addListener = (id, title, msg, type = 'info') => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', () => showToast(title, msg, type));
+        };
+
+        addListener('admin-view-all-activity', 'Actividad', 'Cargando historial completo...', 'info');
+        addListener('admin-export-inventory', 'Exportar', 'Generando reporte en formato PDF...', 'success');
+        addListener('admin-add-product', 'Inventario', 'Abriendo formulario de nuevo equipo...', 'info');
+        addListener('admin-add-user', 'Seguridad', 'Configurando nuevo acceso de usuario...', 'info');
+        addListener('admin-save-system-settings', 'Sistema', 'Ajustes globales actualizados.', 'success');
+
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', () => showToast('Edición', 'Cargando datos del registro...', 'info'));
+        });
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', () => showToast('Eliminar', '¿Estás seguro de borrar este registro?', 'warning'));
+        });
     }
 
     // Contact Modal Logic
@@ -348,18 +395,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cotizarBtns = document.querySelectorAll('a[href="#cotizar"], .btn-cotizar');
 
     if (contactModal && closeContactModalBtn) {
-        // Open Modal when clicking "Cotizar Ahora" buttons
         cotizarBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 contactModal.style.display = 'flex';
-                setTimeout(() => {
-                    contactModal.classList.add('show');
-                }, 10);
+                setTimeout(() => contactModal.classList.add('show'), 10);
             });
         });
 
-        // Close Modal Function
         const closeContactModal = () => {
             contactModal.classList.remove('show');
             setTimeout(() => {
@@ -367,14 +410,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
         };
 
-        // Close on X click
         closeContactModalBtn.addEventListener('click', closeContactModal);
-
-        // Close on outside click
         window.addEventListener('click', (e) => {
-            if (e.target === contactModal) {
-                closeContactModal();
-            }
+            if (e.target === contactModal) closeContactModal();
         });
     }
 
@@ -382,7 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveVendorsBtn = document.getElementById('save-vendors-btn');
     if (saveVendorsBtn) {
         saveVendorsBtn.addEventListener('click', () => {
-            // Get all vendor data from form
             const vendorsData = {
                 vendor1: {
                     name: document.getElementById('vendor1-name').value,
@@ -411,13 +448,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            // Save to localStorage
             localStorage.setItem('robcab-vendors', JSON.stringify(vendorsData));
-
-            // Update the contact modal immediately
             updateContactModal(vendorsData);
 
-            // Show success message
             const originalText = saveVendorsBtn.innerHTML;
             saveVendorsBtn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado Exitosamente';
             saveVendorsBtn.style.background = '#10b981';
@@ -428,11 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to update contact modal with vendor data
     function updateContactModal(data) {
         const vendorCards = document.querySelectorAll('.vendor-card');
-
-        // Update Vendor 1
         if (vendorCards[0]) {
             const v1 = data.vendor1;
             vendorCards[0].href = `https://wa.me/${v1.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
@@ -441,8 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
             vendorCards[0].querySelector('.vendor-role').textContent = v1.role;
             vendorCards[0].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v1.phone}`;
         }
-
-        // Update Vendor 2
         if (vendorCards[1]) {
             const v2 = data.vendor2;
             vendorCards[1].href = `https://wa.me/${v2.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
@@ -451,8 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
             vendorCards[1].querySelector('.vendor-role').textContent = v2.role;
             vendorCards[1].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v2.phone}`;
         }
-
-        // Update Vendor 3
         if (vendorCards[2]) {
             const v3 = data.vendor3;
             vendorCards[2].href = `https://wa.me/${v3.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
@@ -461,8 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
             vendorCards[2].querySelector('.vendor-role').textContent = v3.role;
             vendorCards[2].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v3.phone}`;
         }
-
-        // Update Vendor 4
         if (vendorCards[3]) {
             const v4 = data.vendor4;
             vendorCards[3].href = `https://wa.me/${v4.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
@@ -471,8 +495,6 @@ document.addEventListener('DOMContentLoaded', () => {
             vendorCards[3].querySelector('.vendor-role').textContent = v4.role;
             vendorCards[3].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v4.phone}`;
         }
-
-        // Update Support
         if (vendorCards[4]) {
             const support = data.support;
             vendorCards[4].href = `https://wa.me/${support.phone}?text=Hola,%20necesito%20ayuda%20con%20un%20reclamo%20o%20devolución`;
@@ -482,37 +504,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Load saved vendors data on page load
     const savedVendors = localStorage.getItem('robcab-vendors');
     if (savedVendors) {
         const data = JSON.parse(savedVendors);
-
-        // Update form fields
         if (document.getElementById('vendor1-name')) {
             document.getElementById('vendor1-name').value = data.vendor1.name;
             document.getElementById('vendor1-role').value = data.vendor1.role;
             document.getElementById('vendor1-phone').value = data.vendor1.phone;
-
             document.getElementById('vendor2-name').value = data.vendor2.name;
             document.getElementById('vendor2-role').value = data.vendor2.role;
             document.getElementById('vendor2-phone').value = data.vendor2.phone;
-
             document.getElementById('vendor3-name').value = data.vendor3.name;
             document.getElementById('vendor3-role').value = data.vendor3.role;
             document.getElementById('vendor3-phone').value = data.vendor3.phone;
-
             document.getElementById('vendor4-name').value = data.vendor4.name;
             document.getElementById('vendor4-role').value = data.vendor4.role;
             document.getElementById('vendor4-phone').value = data.vendor4.phone;
-
             document.getElementById('support-name').value = data.support.name;
             document.getElementById('support-role').value = data.support.role;
             document.getElementById('support-phone').value = data.support.phone;
         }
-
-        // Update contact modal
         updateContactModal(data);
-    } // Cierre de if (savedVendors)
+    }
 
     // Product Detail Modal Logic
     const productModal = document.getElementById('product-modal');
@@ -526,8 +539,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const openDetail = (e) => {
                 e.preventDefault();
-
-                // Get data from card
                 const title = card.querySelector('h3').textContent;
                 const price = card.querySelector('.price').textContent;
                 const imgSrc = card.querySelector('img').src;
@@ -535,70 +546,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 const features = card.getAttribute('data-features') ? card.getAttribute('data-features').split('|') : [];
                 const tag = card.getAttribute('data-tag') || 'ROBCAB 2026';
 
-                // Populate Modal
                 document.getElementById('modal-product-title').textContent = title;
                 document.getElementById('modal-product-price').textContent = price;
                 document.getElementById('modal-product-img').src = imgSrc;
                 document.getElementById('modal-product-description').textContent = description;
                 document.getElementById('modal-product-tag').textContent = tag;
 
-                // Features list
                 const featuresList = document.getElementById('modal-product-features');
                 featuresList.innerHTML = '';
                 features.forEach(feat => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<i class="fa-solid fa-check"></i> ${feat}`;
+                    li.innerHTML = `<i class=\"fa-solid fa-check\"></i> ${feat}`;
                     featuresList.appendChild(li);
                 });
 
-                // WhatsApp Link for this specific product
-                const waNumber = "51987654321"; // Default or dynamic from vendors
+                const waNumber = "51987654321";
                 const waBtn = document.getElementById('modal-whatsapp-btn');
                 waBtn.href = `https://wa.me/${waNumber}?text=Hola,%20me%20interesa%20más%20información%20sobre:%20${encodeURIComponent(title)}`;
 
-                // Show Modal
                 productModal.style.display = 'flex';
-                setTimeout(() => {
-                    productModal.classList.add('show');
-                }, 10);
+                setTimeout(() => productModal.classList.add('show'), 10);
             };
 
             if (btnDetail) btnDetail.addEventListener('click', openDetail);
             if (btnQuickView) btnQuickView.addEventListener('click', openDetail);
         });
 
-        // Close Modal
         const closeProductModal = () => {
             productModal.classList.remove('show');
-            setTimeout(() => {
-                productModal.style.display = 'none';
-            }, 300);
+            setTimeout(() => { productModal.style.display = 'none'; }, 300);
         };
-
         closeProductModalBtn.addEventListener('click', closeProductModal);
-
         window.addEventListener('click', (e) => {
-            if (e.target === productModal) {
-                closeProductModal();
-            }
+            if (e.target === productModal) closeProductModal();
         });
     }
 
-    // Hero Products Parallax Effect
+    // Hero Products Parallax
     const heroProducts = document.querySelector('.hero-products');
     const heroCards = document.querySelectorAll('.hero-product-card');
-
     if (heroProducts) {
         window.addEventListener('mousemove', (e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
-
             heroCards.forEach(card => {
                 card.style.transition = 'transform 0.1s ease-out';
                 card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateY(${yAxis}px)`;
             });
         });
-
         window.addEventListener('mouseleave', () => {
             heroCards.forEach(card => {
                 card.style.transition = 'transform 0.5s ease-out';
@@ -611,55 +606,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function showToast(title, message, type = 'info') {
         const container = document.getElementById('toast-container');
         if (!container) return;
-
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-
-        const icon = type === 'success' ? 'fa-circle-check' :
-            type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
-
-        toast.innerHTML = `
-            <i class="fa-solid ${icon}"></i>
-            <div class="toast-content">
-                <span class="toast-title">${title}</span>
-                <span class="toast-message">${message}</span>
-            </div>
-        `;
-
+        const icon = type === 'success' ? 'fa-circle-check' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+        toast.innerHTML = `<i class=\"fa-solid ${icon}\"></i><div class=\"toast-content\"><span class=\"toast-title\">${title}</span><span class=\"toast-message\">${message}</span></div>`;
         container.appendChild(toast);
         setTimeout(() => toast.classList.add('active'), 10);
         setTimeout(() => {
             toast.classList.remove('active');
             setTimeout(() => toast.remove(), 500);
         }, 4000);
-    }
-
-    // Link Admin Buttons to Toasts (Simulations)
-    if (adminPanel) {
-        const addListener = (id, title, msg, type = 'info') => {
-            const el = document.getElementById(id);
-            if (el) el.addEventListener('click', () => showToast(title, msg, type));
-        };
-
-        addListener('admin-view-all-activity', 'Actividad', 'Cargando historial completo...', 'info');
-        addListener('admin-export-inventory', 'Exportar', 'Generando reporte en formato PDF...', 'success');
-        addListener('admin-add-product', 'Inventario', 'Abriendo formulario de nuevo equipo...', 'info');
-        addListener('admin-add-user', 'Seguridad', 'Configurando nuevo acceso de usuario...', 'info');
-        addListener('admin-save-system-settings', 'Sistema', 'Ajustes globales actualizados.', 'success');
-
-        // Table Edit/Delete Buttons
-        document.querySelectorAll('.action-btn.edit').forEach(btn => {
-            btn.addEventListener('click', () => showToast('Edición', 'Cargando datos del registro...', 'info'));
-        });
-        document.querySelectorAll('.action-btn.delete').forEach(btn => {
-            btn.addEventListener('click', () => showToast('Eliminar', '¿Estás seguro de borrar este registro?', 'warning'));
-        });
-
-        // Toggle Sidebar (Mobile)
-        if (toggleSidebarBtn && sidebar) {
-            toggleSidebarBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('mobile-active');
-            });
-        }
     }
 });
