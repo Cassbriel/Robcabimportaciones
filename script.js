@@ -468,4 +468,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Hero Products Parallax Effect
+    const heroProducts = document.querySelector('.hero-products');
+    const heroCards = document.querySelectorAll('.hero-product-card');
+
+    if (heroProducts) {
+        window.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+
+            heroCards.forEach(card => {
+                card.style.transition = 'transform 0.1s ease-out';
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateY(${yAxis}px)`;
+            });
+        });
+
+        // Reset transform when mouse leaves Window or stays still
+        window.addEventListener('mouseleave', () => {
+            heroCards.forEach(card => {
+                card.style.transition = 'transform 0.5s ease-out';
+                card.style.transform = `rotateY(0deg) rotateX(0deg) translateY(0deg)`;
+            });
+        });
+    }
 });

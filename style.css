@@ -67,22 +67,22 @@ h3 {
     display: inline-block;
     background: #ffffff;
     color: #000000;
-    padding: 14px 35px;
-    border-radius: 30px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    border: 2px solid #ffffff;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover {
-    background: transparent;
-    color: #ffffff;
-    box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    background: var(--highlight);
+    color: #000;
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(218, 165, 32, 0.4);
 }
 
 .btn-secondary {
@@ -214,38 +214,207 @@ h3 {
     }
 }
 
-/* Portada (Hero) - Advanced Detail */
+/* Portada (Hero) - Ultra Llamativa */
 .hero {
     position: relative;
-    padding: 140px 0 80px;
+    padding: 160px 0 100px;
     min-height: 100vh;
-    background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000000 100%);
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     overflow: hidden;
 }
 
+/* Efecto Escáner de Seguridad */
 .hero::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(218, 165, 32, 0.05), transparent);
+    animation: scan 8s linear infinite;
+    z-index: 2;
+    pointer-events: none;
+}
+
+@keyframes scan {
+    0% {
+        top: -100%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+/* Efecto de Humo/Niebla Sutil */
+.hero::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    opacity: 0.05;
+    background: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+    z-index: 1;
+}
+
+/* Luces de Fondo Dinámicas */
+.hero-lights {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.light-orb {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(50px);
+    animation: move-orbs 15s infinite alternate ease-in-out;
+}
+
+.light-orb:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.light-orb:nth-child(2) {
+    bottom: 10%;
+    right: 10%;
+    animation-delay: -5s;
+}
+
+@keyframes move-orbs {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(100px, 50px) scale(1.5);
+    }
+}
+
+/* Contenedor de Brillo Central */
+.hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
+    filter: blur(100px);
+    z-index: 1;
+    animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+.hero-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    z-index: 5;
+    width: 100%;
+}
+
+.hero-text {
+    max-width: 900px;
+    animation: fade-up 1.5s ease-out;
+}
+
+@keyframes fade-up {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .hero-subtitle {
     display: inline-block;
-    background: linear-gradient(90deg, var(--highlight), #fff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 1.1rem;
+    letter-spacing: 8px;
+    color: var(--highlight);
+    margin-bottom: 25px;
     font-weight: 700;
     text-transform: uppercase;
+    animation: glow-blink 2s infinite alternate;
+}
+
+@keyframes glow-blink {
+    0% {
+        opacity: 0.6;
+        text-shadow: 0 0 5px var(--highlight);
+    }
+
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 20px var(--highlight);
+    }
 }
 
 .hero-text h1 {
-    text-shadow: 0 10px 30px rgba(218, 165, 32, 0.2);
+    font-size: 6.5rem;
+    margin-bottom: 25px;
+    font-weight: 900;
+    letter-spacing: 10px;
+    line-height: 1;
+    color: #fff;
+}
+
+.hero-text h1 .highlight {
+    color: var(--highlight);
+    text-shadow: 0 0 30px rgba(218, 165, 32, 0.6);
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: var(--secondary-text);
+    margin: 0 auto 50px;
+    letter-spacing: 4px;
+    line-height: 2;
+    max-width: 800px;
+    font-weight: 300;
+}
+
+/* Floating Effects for Grid */
+.hero-products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    perspective: 1000px;
 }
 
 /* Thumbnail Magnification - Detailed Animation */
