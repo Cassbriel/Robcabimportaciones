@@ -31,15 +31,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Navbar Background & Style Change on Scroll
+    // Navbar Background & Style Change on Scroll + Progress Bar
     const navbar = document.querySelector('.navbar');
+    const scrollBar = document.getElementById('scroll-bar');
+
     window.addEventListener('scroll', () => {
+        // Navbar styling
         if (window.scrollY > 50) {
             navbar.classList.add('scroll-active');
         } else {
             navbar.classList.remove('scroll-active');
         }
+
+        // Progress bar logic
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        if (scrollBar) {
+            scrollBar.style.width = scrolled + "%";
+        }
     });
+
+    // Ensure the new Cotizar button works
+    const navCotizarBtn = document.getElementById('navbar-cotizar');
+    if (navCotizarBtn) {
+        navCotizarBtn.addEventListener('click', (e) => {
+            const contactModal = document.getElementById('contact-modal');
+            if (contactModal) {
+                contactModal.style.display = 'flex';
+                setTimeout(() => contactModal.classList.add('show'), 10);
+            }
+        });
+    }
 
     // Simple fade-in animation on scroll
     const fadeInElements = document.querySelectorAll('.feature-card, .product-card');
