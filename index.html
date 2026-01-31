@@ -26,6 +26,7 @@
                 <li><a href="#productos">Productos</a></li>
                 <li><a href="#servicios">Servicios</a></li>
                 <li><a href="#contacto">Contacto</a></li>
+                <li><a href="#" id="login-btn"><i class="fa-solid fa-user-lock"></i> Ingreso</a></li>
             </ul>
             <div class="search-bar">
                 <input type="text" placeholder="Buscar productos...">
@@ -169,6 +170,584 @@
             <p>&copy; 2024 ROBCAB Importaciones. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2>Control Maestro</h2>
+                <p>Acceso restringido a administradores</p>
+            </div>
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" placeholder="Usuario" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn-primary full-width">Ingresar al Sistema</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cloud-Based Professional Admin Panel -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <i class="fa-solid fa-shield-cat"></i>
+                    <span>ROBCAB Admin</span>
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i>
+                            <span>Resumen</span>
+                        </li>
+                        <li data-tab="inventory"><i class="fa-solid fa-boxes-stacked"></i> <span>Inventario</span></li>
+                        <li data-tab="categories"><i class="fa-solid fa-tags"></i> <span>Categorías</span></li>
+                        <li data-tab="orders"><i class="fa-solid fa-file-invoice-dollar"></i> <span>Pedidos</span></li>
+                        <li data-tab="users"><i class="fa-solid fa-users-gear"></i> <span>Usuarios</span></li>
+                        <li data-tab="content"><i class="fa-solid fa-pen-to-square"></i> <span>Contenido Web</span></li>
+                        <li data-tab="settings"><i class="fa-solid fa-sliders"></i> <span>Ajustes</span></li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fa-solid fa-power-off"></i> <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <!-- Top Header -->
+                <header class="admin-topbar">
+                    <div class="toggle-sidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                    <div class="header-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar orden, producto...">
+                    </div>
+                    <div class="user-profile">
+                        <div class="notifications" id="notifications-btn">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="badge-dot" id="notif-badge"></span>
+
+                            <!-- Notifications Dropdown -->
+                            <div class="notifications-dropdown" id="notifications-dropdown">
+                                <div class="dropdown-header">
+                                    <h4>Notificaciones</h4>
+                                    <span class="mark-read">Marcar leídas</span>
+                                </div>
+                                <ul class="notif-list">
+                                    <li class="notif-item unread">
+                                        <div class="notif-icon warning"><i class="fa-solid fa-triangle-exclamation"></i>
+                                        </div>
+                                        <div class="notif-text">
+                                            <p><strong>Stock Bajo:</strong> Disco Duro 2TB (0 un.)</p>
+                                            <span>Hace 10 min</span>
+                                        </div>
+                                    </li>
+                                    <li class="notif-item unread">
+                                        <div class="notif-icon info"><i class="fa-solid fa-file-invoice"></i></div>
+                                        <div class="notif-text">
+                                            <p><strong>Nuevo Pedido:</strong> #ORD-293 (Carlos M.)</p>
+                                            <span>Hace 2 horas</span>
+                                        </div>
+                                    </li>
+                                    <li class="notif-item">
+                                        <div class="notif-icon success"><i class="fa-solid fa-check-circle"></i></div>
+                                        <div class="notif-text">
+                                            <p><strong>Pago Recibido:</strong> Mantenimiento #ORD-280</p>
+                                            <span>Ayer</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="dropdown-footer">
+                                    <a href="#">Ver todas las notificaciones</a>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=Admin+Robcab&background=d4af37&color=fff"
+                            alt="Administrador">
+                        <span>Gerencia</span>
+                        <button id="close-admin" class="close-admin-btn" title="Cerrar Panel"><i
+                                class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </header>
+
+                <!-- Content Area -->
+                <div class="admin-content-area">
+
+                    <!-- Dashboard Tab -->
+                    <div id="tab-dashboard" class="admin-tab active">
+                        <h2 class="page-title">Panel Principal</h2>
+                        <div class="stats-overview">
+                            <div class="stat-widget">
+                                <div class="stat-icon warning"><i class="fa-solid fa-wallet"></i></div>
+                                <div class="stat-info">
+                                    <h3>Ventas del Mes</h3>
+                                    <p>S/ 12,450</p>
+                                    <span class="trend up"><i class="fa-solid fa-arrow-trend-up"></i> +15% vs mes
+                                        anterior</span>
+                                </div>
+                            </div>
+                            <div class="stat-widget">
+                                <div class="stat-icon info"><i class="fa-solid fa-clipboard-list"></i></div>
+                                <div class="stat-info">
+                                    <h3>Pedidos Pendientes</h3>
+                                    <p>8</p>
+                                    <span class="trend neutral">Requieren atención</span>
+                                </div>
+                            </div>
+                            <div class="stat-widget">
+                                <div class="stat-icon alert"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                <div class="stat-info">
+                                    <h3>Stock Bajo</h3>
+                                    <p>3 Productos</p>
+                                    <span class="trend down">Reabastecer pronto</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-grid">
+                            <div class="chart-card large">
+                                <div class="card-header">
+                                    <h3>Actividad Reciente</h3>
+                                    <button class="btn-text">Ver Todo</button>
+                                </div>
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Estado</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Empresa Textile S.A.</td>
+                                            <td><span class="badge success">Completado</span></td>
+                                            <td>S/ 2,400</td>
+                                            <td>Hoy, 10:30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Juan Pérez (Casa)</td>
+                                            <td><span class="badge warning">Pendiente</span></td>
+                                            <td>S/ 580</td>
+                                            <td>Ayer, 16:45</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Minimarket "El Sol"</td>
+                                            <td><span class="badge info">Instalación</span></td>
+                                            <td>S/ 1,200</td>
+                                            <td>28 Ene</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Tab -->
+                    <div id="tab-inventory" class="admin-tab">
+                        <div class="tab-header-actions">
+                            <h2 class="page-title">Inventario de Seguridad</h2>
+                            <div class="action-buttons">
+                                <button class="btn-secondary-small"><i class="fa-solid fa-file-export"></i>
+                                    Exportar</button>
+                                <button class="btn-primary-small"><i class="fa-solid fa-plus"></i> Nuevo Equipo</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>SKU</th>
+                                        <th>Categoría</th>
+                                        <th>Stock</th>
+                                        <th>Precio Unit.</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <div class="img-thumb"><i class="fa-solid fa-video"></i></div>
+                                                <div>
+                                                    <strong>Cámara IP Dome 360°</strong>
+                                                    <div style="font-size: 0.8em; color: #777;">1080p, Visión Nocturna
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>CAM-001</td>
+                                        <td>Interiores</td>
+                                        <td><span class="badge success">45 un.</span></td>
+                                        <td>S/ 150.00</td>
+                                        <td>
+                                            <button class="action-btn edit" title="Editar"><i
+                                                    class="fa-solid fa-pen"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <div class="img-thumb"><i class="fa-solid fa-video"></i></div>
+                                                <div>
+                                                    <strong>Kit DVR 4 Canales + 4 CAM</strong>
+                                                    <div style="font-size: 0.8em; color: #777;">Incluye Disco 1TB</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>KIT-EXT-04</td>
+                                        <td>Kits Completos</td>
+                                        <td><span class="badge warning">5 un.</span></td>
+                                        <td>S/ 580.00</td>
+                                        <td>
+                                            <button class="action-btn edit" title="Editar"><i
+                                                    class="fa-solid fa-pen"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <div class="img-thumb"><i class="fa-solid fa-hard-drive"></i></div>
+                                                <div>
+                                                    <strong>Disco Duro 2TB Surveillance</strong>
+                                                    <div style="font-size: 0.8em; color: #777;">Optimizado para video
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>HDD-2TB</td>
+                                        <td>Accesorios</td>
+                                        <td><span class="badge alert">0 un.</span></td>
+                                        <td>S/ 220.00</td>
+                                        <td>
+                                            <button class="action-btn edit" title="Editar"><i
+                                                    class="fa-solid fa-pen"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <!-- Categories Tab -->
+                    <div id="tab-categories" class="admin-tab">
+                        <div class="tab-header-actions">
+                            <h2 class="page-title">Gestión de Categorías</h2>
+                            <button class="btn-primary-small"><i class="fa-solid fa-plus"></i> Nueva Categoría</button>
+                        </div>
+                        <div class="dashboard-grid">
+                            <div class="chart-card large">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Descripción</th>
+                                            <th>Productos</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Cámaras Interiores</strong></td>
+                                            <td>Dispositivos para vigilancia dentro del hogar/oficina.</td>
+                                            <td>12</td>
+                                            <td><span class="badge success">Visible</span></td>
+                                            <td>
+                                                <button class="action-btn edit"><i class="fa-solid fa-pen"></i></button>
+                                                <button class="action-btn delete"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Kits de Vigilancia</strong></td>
+                                            <td>Paquetes completos de DVR + Cámaras.</td>
+                                            <td>5</td>
+                                            <td><span class="badge success">Visible</span></td>
+                                            <td>
+                                                <button class="action-btn edit"><i class="fa-solid fa-pen"></i></button>
+                                                <button class="action-btn delete"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Accesorios</strong></td>
+                                            <td>Cables, discos duros, conectores, etc.</td>
+                                            <td>24</td>
+                                            <td><span class="badge warning">Oculto</span></td>
+                                            <td>
+                                                <button class="action-btn edit"><i class="fa-solid fa-pen"></i></button>
+                                                <button class="action-btn delete"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Ofertas Especiales</strong></td>
+                                            <td>Productos con descuento temporal.</td>
+                                            <td>3</td>
+                                            <td><span class="badge success">Visible</span></td>
+                                            <td>
+                                                <button class="action-btn edit"><i class="fa-solid fa-pen"></i></button>
+                                                <button class="action-btn delete"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users & Permissions Tab -->
+                    <div id="tab-users" class="admin-tab">
+                        <div class="tab-header-actions">
+                            <h2 class="page-title">Usuarios y Permisos</h2>
+                            <button class="btn-primary-small"><i class="fa-solid fa-user-plus"></i> Nuevo
+                                Usuario</button>
+                        </div>
+
+                        <div class="users-grid">
+                            <!-- User Card 1 -->
+                            <div class="user-card">
+                                <div class="user-card-header">
+                                    <img src="https://ui-avatars.com/api/?name=Admin+Master&background=d4af37&color=fff"
+                                        alt="User">
+                                    <div class="user-info">
+                                        <h4>Admin Principal</h4>
+                                        <p>admin@robcab.com</p>
+                                    </div>
+                                    <span class="badge success">Super Admin</span>
+                                </div>
+                                <div class="user-permissions">
+                                    <h5>Permisos:</h5>
+                                    <div class="permission-tags">
+                                        <span><i class="fa-solid fa-check"></i> Acceso Total</span>
+                                        <span><i class="fa-solid fa-check"></i> Configuración</span>
+                                        <span><i class="fa-solid fa-check"></i> Usuarios</span>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn-text">Editar Perfil</button>
+                                </div>
+                            </div>
+
+                            <!-- User Card 2 -->
+                            <div class="user-card">
+                                <div class="user-card-header">
+                                    <img src="https://ui-avatars.com/api/?name=Juan+Ventas&background=30363d&color=fff"
+                                        alt="User">
+                                    <div class="user-info">
+                                        <h4>Juan Ventas</h4>
+                                        <p>juan@robcab.com</p>
+                                    </div>
+                                    <span class="badge info">Vendedor</span>
+                                </div>
+                                <div class="user-permissions">
+                                    <h5>Permisos:</h5>
+                                    <div class="permission-tags">
+                                        <span><i class="fa-solid fa-check"></i> Pedidos</span>
+                                        <span><i class="fa-solid fa-check"></i> Inventario</span>
+                                        <span class="disabled"><i class="fa-solid fa-xmark"></i> Configuración</span>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn-text">Gestionar Rol</button>
+                                    <button class="btn-text delete">Eliminar</button>
+                                </div>
+                            </div>
+
+                            <!-- User Card 3 -->
+                            <div class="user-card">
+                                <div class="user-card-header">
+                                    <img src="https://ui-avatars.com/api/?name=Ana+Content&background=30363d&color=fff"
+                                        alt="User">
+                                    <div class="user-info">
+                                        <h4>Ana Editora</h4>
+                                        <p>ana@robcab.com</p>
+                                    </div>
+                                    <span class="badge warning">Editor</span>
+                                </div>
+                                <div class="user-permissions">
+                                    <h5>Permisos:</h5>
+                                    <div class="permission-tags">
+                                        <span><i class="fa-solid fa-check"></i> Contenido Web</span>
+                                        <span><i class="fa-solid fa-check"></i> Productos</span>
+                                        <span class="disabled"><i class="fa-solid fa-xmark"></i> Pedidos</span>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn-text">Gestionar Rol</button>
+                                    <button class="btn-text delete">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Orders Tab -->
+                    <div id="tab-orders" class="admin-tab">
+                        <div class="tab-header-actions">
+                            <h2 class="page-title">Gestión de Pedidos</h2>
+                        </div>
+                        <div class="orders-kanban">
+                            <!-- Column 1 -->
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="dot warning"></span> Nuevos / Cotizar
+                                </div>
+                                <div class="kanban-card">
+                                    <div class="k-card-header">
+                                        <span class="k-id">#ORD-293</span>
+                                        <span class="k-date">Hace 2h</span>
+                                    </div>
+                                    <h4>Instalación Oficina 200m²</h4>
+                                    <p>Cliente solicita visita técnica.</p>
+                                    <div class="k-card-footer">
+                                        <div class="k-user"><i class="fa-solid fa-user"></i> Carlos M.</div>
+                                    </div>
+                                </div>
+                                <div class="kanban-card">
+                                    <div class="k-card-header">
+                                        <span class="k-id">#ORD-292</span>
+                                        <span class="k-date">Hace 5h</span>
+                                    </div>
+                                    <h4>Cotización 8 Cámaras</h4>
+                                    <p>Solo equipos, sin instalación.</p>
+                                    <div class="k-card-footer">
+                                        <div class="k-user"><i class="fa-solid fa-user"></i> Ana R.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Column 2 -->
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="dot info"></span> En Proceso
+                                </div>
+                                <div class="kanban-card">
+                                    <div class="k-card-header">
+                                        <span class="k-id">#ORD-289</span>
+                                        <span class="k-date">Ayer</span>
+                                    </div>
+                                    <h4>Envío a Provincia</h4>
+                                    <p>Kit 4 Cámaras a Cusco.</p>
+                                    <div class="k-card-footer">
+                                        <div class="k-user"><i class="fa-solid fa-user"></i> Transportes Cruz</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Column 3 -->
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="dot success"></span> Completados
+                                </div>
+                                <div class="kanban-card">
+                                    <div class="k-card-header">
+                                        <span class="k-id">#ORD-280</span>
+                                        <span class="k-date">28 Ene</span>
+                                    </div>
+                                    <h4>Mantenimiento Preventivo</h4>
+                                    <p>Condominio Los Olivos.</p>
+                                    <div class="k-card-footer high-priority">
+                                        <span class="paid">PAGADO</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content (Web) Tab -->
+                    <div id="tab-content" class="admin-tab">
+                        <h2 class="page-title">Personalización Web</h2>
+                        <div class="settings-grid">
+                            <div class="setting-card full">
+                                <h3>Banner Publicitario (Hero)</h3>
+                                <p style="color:#7d8590; margin-bottom:15px; font-size:0.9em;">Actualiza la imagen
+                                    principal y el texto de bienvenida.</p>
+                                <div class="form-group">
+                                    <label>Título Principal</label>
+                                    <input type="text" value="Seguridad Inteligente para tu Tranquilidad">
+                                </div>
+                                <div class="form-group">
+                                    <label>Frase Promocional</label>
+                                    <input type="text"
+                                        value="Protege lo que más importa con nuestras cámaras de seguridad de última generación.">
+                                </div>
+                                <div class="upload-area small">
+                                    <i class="fa-solid fa-image"></i>
+                                    <p>Cambiar Imagen de Fondo</p>
+                                </div>
+                            </div>
+                            <div class="setting-card">
+                                <h3>Anuncios Flash</h3>
+                                <div class="form-group toggle-group">
+                                    <label>Mostrar Barra Superior</label>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Texto del Anuncio</label>
+                                    <input type="text"
+                                        value="¡Oferta! Instalación GRATIS por compra de Kit de 8 cámaras.">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div id="tab-settings" class="admin-tab">
+                        <h2 class="page-title">Ajustes Generales</h2>
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label>Teléfono de Contacto (Botón WhatsApp)</label>
+                                <input type="text" value="+51 987 654 321">
+                            </div>
+                            <div class="form-group">
+                                <label>Correo de Notificaciones</label>
+                                <input type="email" value="alertas@robcab.com">
+                            </div>
+                            <div class="form-group toggle-group">
+                                <label>Modo "Solo Catálogo" (Desactivar Precios)</label>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <button class="btn-primary-small">Guardar Configuración</button>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-content logout-content">
+            <div class="logout-icon">
+                <i class="fa-solid fa-power-off"></i>
+            </div>
+            <h2>¿Cerrar Sesión?</h2>
+            <p>Estás a punto de salir del Panel Maestro.</p>
+            <div class="logout-actions">
+                <button id="cancel-logout" class="btn-secondary">Cancelar</button>
+                <button id="confirm-logout" class="btn-primary">Sí, Salir</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
