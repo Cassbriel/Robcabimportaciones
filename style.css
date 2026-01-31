@@ -2914,3 +2914,134 @@ input:checked+.slider:before {
         opacity: 1;
     }
 }
+
+/* --- ADMIN PANEL MOBILE RESPONSIVENESS --- */
+@media (max-width: 992px) {
+    .admin-main {
+        width: 100%;
+    }
+
+    .admin-topbar {
+        padding: 0 15px;
+    }
+
+    .topbar-actions {
+        gap: 15px;
+    }
+
+    .user-profile span {
+        display: none;
+    }
+
+    .btn-confirm-changes span {
+        display: none;
+    }
+
+    .btn-confirm-changes {
+        padding: 10px;
+        min-width: 40px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Layout Adjustments */
+    .admin-layout {
+        position: relative;
+    }
+
+    .admin-sidebar {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100%;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .admin-sidebar.mobile-active {
+        left: 0;
+    }
+
+    .admin-content-area {
+        padding: 20px 15px;
+    }
+
+    /* Dashboard Widgets */
+    .stats-overview {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stat-widget {
+        padding: 15px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card {
+        padding: 15px;
+        height: auto;
+    }
+
+    /* Tables */
+    .admin-table th,
+    .admin-table td {
+        padding: 12px 10px;
+        font-size: 0.85rem;
+    }
+
+    .product-cell div div {
+        display: none;
+        /* Hide minor description on mobile */
+    }
+
+    /* Users Tab */
+    .users-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Web Content Tab */
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Modals Responsive */
+    .modal-content {
+        width: 92%;
+        padding: 30px 20px;
+    }
+
+    /* Managed Admin Form */
+    .admin-perm-toggles {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Fix for horizontal scroll on some mobile views */
+.admin-tab {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.table-responsive {
+    margin-top: 10px;
+}
+
+/* Smooth Sidebar Overlay (Optional but nice) */
+.admin-sidebar.mobile-active::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100vw - 280px);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 999;
+}
