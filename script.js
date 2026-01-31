@@ -613,34 +613,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Main Search Functionality
+    // Main Search & Suggestions Functionality
     const searchInput = document.getElementById('main-search-input');
     const searchBtn = document.getElementById('main-search-btn');
+    const searchDropdown = document.getElementById('search-results-dropdown');
     const allProducts = document.querySelectorAll('.product-card');
 
-    const filterProducts = () => {
+    const updateSearch = () => {
         const query = searchInput.value.toLowerCase().trim();
 
+        // 1. Filter visible products on page
         allProducts.forEach(card => {
             const title = card.querySelector('h3').textContent.toLowerCase();
             const desc = card.getAttribute('data-description').toLowerCase();
-
             if (title.includes(query) || desc.includes(query)) {
                 card.style.display = 'block';
-                // Small delay for animation if needed
                 setTimeout(() => card.style.opacity = '1', 10);
             } else {
                 card.style.opacity = '0';
                 setTimeout(() => card.style.display = 'none', 300);
             }
         });
+
+        // 2. Update Suggestions Dropdown
+        if (query.length === 0) {
+            searchDropdown.classList.remove('active');
+            searchDropdown.innerHTML = '';
+            return;
+        }
+
+        let matches = [];
+        allProducts.forEach(card => {
+            const title = card.querySelector('h3').textContent;
+            const price = card.querySelector('.price').textContent;
+            const imgSrc = card.querySelector('img').src;
+            const desc = card.getAttribute('data-description') || "";
+
+            if (title.toLowerCase().includes(query) || desc.toLowerCase().includes(query)) {
+                matches.push({ title, price, imgSrc, card });
+            }
+        });
+
+        if (matches.length > 0) {
+            searchDropdown.innerHTML = '';
+            matches.forEach(item => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'search-result-item';
+                resultItem.innerHTML = `
+                    <img src="${item.imgSrc}" alt="${item.title}">
+                    <div class="search-result-info">
+                        <span class="search-result-title">${item.title}</span>
+                        <span class="search-result-price">${item.price}</span>
+                    </div>
+                `;
+                resultItem.addEventListener('click', () => {
+                    const detailBtn = item.card.querySelector('.btn-view-details') || item.card.querySelector('.open-product-detail');
+                    if (detailBtn) detailBtn.click();
+                    searchDropdown.classList.remove('active');
+                    searchInput.value = '';
+                });
+                searchDropdown.appendChild(resultItem);
+            });
+            searchDropdown.classList.add('active');
+        } else {
+            searchDropdown.innerHTML = '<div class="search-no-results">No se encontraron productos</div>';
+            searchDropdown.classList.add('active');
+        }
     };
 
     if (searchInput) {
-        searchInput.addEventListener('input', filterProducts);
+        searchInput.addEventListener('input', updateSearch);
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                searchDropdown.classList.remove('active');
+            }
+        });
     }
     if (searchBtn) {
-        searchBtn.addEventListener('click', filterProducts);
+        searchBtn.addEventListener('click', updateSearch);
     }
 
     // Toast System
