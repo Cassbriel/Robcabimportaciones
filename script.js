@@ -228,4 +228,40 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // Contact Modal Logic
+    const contactModal = document.getElementById('contact-modal');
+    const closeContactModalBtn = document.getElementById('close-contact-modal');
+    const cotizarBtns = document.querySelectorAll('a[href="#cotizar"]');
+
+    if (contactModal && closeContactModalBtn) {
+        // Open Modal when clicking "Cotizar Ahora" buttons
+        cotizarBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                contactModal.style.display = 'flex';
+                setTimeout(() => {
+                    contactModal.classList.add('show');
+                }, 10);
+            });
+        });
+
+        // Close Modal Function
+        const closeContactModal = () => {
+            contactModal.classList.remove('show');
+            setTimeout(() => {
+                contactModal.style.display = 'none';
+            }, 300);
+        };
+
+        // Close on X click
+        closeContactModalBtn.addEventListener('click', closeContactModal);
+
+        // Close on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                closeContactModal();
+            }
+        });
+    }
 });

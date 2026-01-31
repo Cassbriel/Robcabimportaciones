@@ -1809,3 +1809,161 @@ input:checked+.slider:before {
     color: var(--highlight);
     text-decoration: none;
 }
+
+/* Contact Modal Styles */
+.contact-modal-content {
+    max-width: 700px;
+    width: 90%;
+}
+
+.contact-modal-content .modal-header {
+    margin-bottom: 40px;
+}
+
+.contact-modal-content .modal-header h2 {
+    font-size: 2rem;
+}
+
+.vendors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.vendor-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.vendor-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 211, 102, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.vendor-card:hover::before {
+    left: 100%;
+}
+
+.vendor-card:hover {
+    transform: translateY(-5px);
+    border-color: #25D366;
+    background: rgba(37, 211, 102, 0.05);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
+}
+
+.vendor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #25D366;
+}
+
+.vendor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vendor-info {
+    flex: 1;
+}
+
+.vendor-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.vendor-role {
+    font-size: 0.85rem;
+    color: var(--secondary-text);
+    margin-bottom: 8px;
+}
+
+.vendor-phone {
+    font-size: 0.9rem;
+    color: #25D366;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vendor-phone i {
+    font-size: 1.1rem;
+}
+
+.vendor-action {
+    color: var(--secondary-text);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.vendor-card:hover .vendor-action {
+    color: #25D366;
+    transform: translateX(5px);
+}
+
+/* Support Card Special Styling */
+.support-card {
+    border-color: #cd853f;
+}
+
+.support-card:hover {
+    border-color: var(--highlight);
+    background: rgba(212, 175, 55, 0.05);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+}
+
+.support-avatar {
+    background: linear-gradient(135deg, var(--highlight), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--highlight);
+}
+
+.support-avatar i {
+    font-size: 1.8rem;
+    color: #0b0e14;
+}
+
+.support-card .vendor-phone {
+    color: var(--highlight);
+}
+
+.support-card:hover .vendor-action {
+    color: var(--highlight);
+}
+
+/* Responsive for Contact Modal */
+@media (max-width: 768px) {
+    .vendors-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-modal-content {
+        max-width: 95%;
+        padding: 30px 20px;
+    }
+
+    .contact-modal-content .modal-header h2 {
+        font-size: 1.5rem;
+    }
+}
