@@ -189,7 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     reader.onload = (event) => {
                         selectedBgData = event.target.result;
                         bgStatus.textContent = `Imagen seleccionada: ${file.name}`;
-                        showToast('Imagen Lista', 'Pulsa "Confirmar Cambios" para aplicar.', 'info');
+
+                        // Immediate Preview
+                        const heroSection = document.querySelector('.hero');
+                        if (heroSection) {
+                            heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${selectedBgData})`;
+                            heroSection.style.backgroundSize = 'cover';
+                            heroSection.style.backgroundPosition = 'center';
+                        }
+
+                        showToast('Imagen Lista', 'Pulsa "Confirmar Cambios" para aplicar permanentemente.', 'info');
                     };
                     reader.readAsDataURL(file);
                 }
@@ -221,9 +230,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Background Sync
                 if (selectedBgData) {
-                    const heroSection = document.getElementById('hero');
+                    const heroSection = document.querySelector('.hero');
                     if (heroSection) {
                         heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${selectedBgData})`;
+                        heroSection.style.backgroundSize = 'cover';
+                        heroSection.style.backgroundPosition = 'center';
                     }
                 }
 
@@ -602,6 +613,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Main Search Functionality
+    const searchInput = document.getElementById('main-search-input');
+    const searchBtn = document.getElementById('main-search-btn');
+    const allProducts = document.querySelectorAll('.product-card');
+
+    const filterProducts = () => {
+        const query = searchInput.value.toLowerCase().trim();
+
+        allProducts.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const desc = card.getAttribute('data-description').toLowerCase();
+
+            if (title.includes(query) || desc.includes(query)) {
+                card.style.display = 'block';
+                // Small delay for animation if needed
+                setTimeout(() => card.style.opacity = '1', 10);
+            } else {
+                card.style.opacity = '0';
+                setTimeout(() => card.style.display = 'none', 300);
+            }
+        });
+    };
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterProducts);
+    }
+    if (searchBtn) {
+        searchBtn.addEventListener('click', filterProducts);
+    }
+
     // Toast System
     function showToast(title, message, type = 'info') {
         const container = document.getElementById('toast-container');
@@ -609,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         const icon = type === 'success' ? 'fa-circle-check' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
-        toast.innerHTML = `<i class=\"fa-solid ${icon}\"></i><div class=\"toast-content\"><span class=\"toast-title\">${title}</span><span class=\"toast-message\">${message}</span></div>`;
+        toast.innerHTML = `<i class="fa-solid ${icon}"></i><div class="toast-content"><span class="toast-title">${title}</span><span class="toast-message">${message}</span></div>`;
         container.appendChild(toast);
         setTimeout(() => toast.classList.add('active'), 10);
         setTimeout(() => {
