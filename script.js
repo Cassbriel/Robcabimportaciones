@@ -252,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Simulate saving delay and Apply changes
                 setTimeout(() => {
                     syncChanges();
+                    showToast('Éxito', 'Todos los cambios han sido aplicados correctamente.', 'success');
                     confirmAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>¡CAMBIOS APLICADOS!</span>';
                     confirmAllBtn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
 
@@ -598,12 +599,67 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Reset transform when mouse leaves Window or stays still
         window.addEventListener('mouseleave', () => {
             heroCards.forEach(card => {
                 card.style.transition = 'transform 0.5s ease-out';
                 card.style.transform = `rotateY(0deg) rotateX(0deg) translateY(0deg)`;
             });
         });
+    }
+
+    // Toast System
+    function showToast(title, message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const icon = type === 'success' ? 'fa-circle-check' :
+            type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+
+        toast.innerHTML = `
+            <i class="fa-solid ${icon}"></i>
+            <div class="toast-content">
+                <span class="toast-title">${title}</span>
+                <span class="toast-message">${message}</span>
+            </div>
+        `;
+
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('active'), 10);
+        setTimeout(() => {
+            toast.classList.remove('active');
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
+    }
+
+    // Link Admin Buttons to Toasts (Simulations)
+    if (adminPanel) {
+        const addListener = (id, title, msg, type = 'info') => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', () => showToast(title, msg, type));
+        };
+
+        addListener('admin-view-all-activity', 'Actividad', 'Cargando historial completo...', 'info');
+        addListener('admin-export-inventory', 'Exportar', 'Generando reporte en formato PDF...', 'success');
+        addListener('admin-add-product', 'Inventario', 'Abriendo formulario de nuevo equipo...', 'info');
+        addListener('admin-add-user', 'Seguridad', 'Configurando nuevo acceso de usuario...', 'info');
+        addListener('admin-save-system-settings', 'Sistema', 'Ajustes globales actualizados.', 'success');
+
+        // Table Edit/Delete Buttons
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', () => showToast('Edición', 'Cargando datos del registro...', 'info'));
+        });
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', () => showToast('Eliminar', '¿Estás seguro de borrar este registro?', 'warning'));
+        });
+
+        // Toggle Sidebar (Mobile)
+        if (toggleSidebarBtn && sidebar) {
+            toggleSidebarBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-active');
+            });
+        }
     }
 });
