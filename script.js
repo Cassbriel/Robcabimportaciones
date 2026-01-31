@@ -399,5 +399,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update contact modal
         updateContactModal(data);
+    } // Cierre de if (savedVendors)
+
+    // Product Detail Modal Logic
+    const productModal = document.getElementById('product-modal');
+    const closeProductModalBtn = document.getElementById('close-product-modal');
+    const productCards = document.querySelectorAll('.product-card');
+
+    if (productModal && closeProductModalBtn) {
+        productCards.forEach(card => {
+            const btnDetail = card.querySelector('.open-product-detail');
+            const btnQuickView = card.querySelector('.btn-view-details');
+
+            const openDetail = (e) => {
+                e.preventDefault();
+
+                // Get data from card
+                const title = card.querySelector('h3').textContent;
+                const price = card.querySelector('.price').textContent;
+                const imgSrc = card.querySelector('img').src;
+                const description = card.getAttribute('data-description');
+                const features = card.getAttribute('data-features') ? card.getAttribute('data-features').split('|') : [];
+                const tag = card.getAttribute('data-tag') || 'ROBCAB 2026';
+
+                // Populate Modal
+                document.getElementById('modal-product-title').textContent = title;
+                document.getElementById('modal-product-price').textContent = price;
+                document.getElementById('modal-product-img').src = imgSrc;
+                document.getElementById('modal-product-description').textContent = description;
+                document.getElementById('modal-product-tag').textContent = tag;
+
+                // Features list
+                const featuresList = document.getElementById('modal-product-features');
+                featuresList.innerHTML = '';
+                features.forEach(feat => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fa-solid fa-check"></i> ${feat}`;
+                    featuresList.appendChild(li);
+                });
+
+                // WhatsApp Link for this specific product
+                const waNumber = "51987654321"; // Default or dynamic from vendors
+                const waBtn = document.getElementById('modal-whatsapp-btn');
+                waBtn.href = `https://wa.me/${waNumber}?text=Hola,%20me%20interesa%20más%20información%20sobre:%20${encodeURIComponent(title)}`;
+
+                // Show Modal
+                productModal.style.display = 'flex';
+                setTimeout(() => {
+                    productModal.classList.add('show');
+                }, 10);
+            };
+
+            if (btnDetail) btnDetail.addEventListener('click', openDetail);
+            if (btnQuickView) btnQuickView.addEventListener('click', openDetail);
+        });
+
+        // Close Modal
+        const closeProductModal = () => {
+            productModal.classList.remove('show');
+            setTimeout(() => {
+                productModal.style.display = 'none';
+            }, 300);
+        };
+
+        closeProductModalBtn.addEventListener('click', closeProductModal);
+
+        window.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeProductModal();
+            }
+        });
     }
 });
