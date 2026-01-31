@@ -264,4 +264,140 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Save Vendors Configuration
+    const saveVendorsBtn = document.getElementById('save-vendors-btn');
+    if (saveVendorsBtn) {
+        saveVendorsBtn.addEventListener('click', () => {
+            // Get all vendor data from form
+            const vendorsData = {
+                vendor1: {
+                    name: document.getElementById('vendor1-name').value,
+                    role: document.getElementById('vendor1-role').value,
+                    phone: document.getElementById('vendor1-phone').value
+                },
+                vendor2: {
+                    name: document.getElementById('vendor2-name').value,
+                    role: document.getElementById('vendor2-role').value,
+                    phone: document.getElementById('vendor2-phone').value
+                },
+                vendor3: {
+                    name: document.getElementById('vendor3-name').value,
+                    role: document.getElementById('vendor3-role').value,
+                    phone: document.getElementById('vendor3-phone').value
+                },
+                vendor4: {
+                    name: document.getElementById('vendor4-name').value,
+                    role: document.getElementById('vendor4-role').value,
+                    phone: document.getElementById('vendor4-phone').value
+                },
+                support: {
+                    name: document.getElementById('support-name').value,
+                    role: document.getElementById('support-role').value,
+                    phone: document.getElementById('support-phone').value
+                }
+            };
+
+            // Save to localStorage
+            localStorage.setItem('robcab-vendors', JSON.stringify(vendorsData));
+
+            // Update the contact modal immediately
+            updateContactModal(vendorsData);
+
+            // Show success message
+            const originalText = saveVendorsBtn.innerHTML;
+            saveVendorsBtn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado Exitosamente';
+            saveVendorsBtn.style.background = '#10b981';
+            setTimeout(() => {
+                saveVendorsBtn.innerHTML = originalText;
+                saveVendorsBtn.style.background = '';
+            }, 2000);
+        });
+    }
+
+    // Function to update contact modal with vendor data
+    function updateContactModal(data) {
+        const vendorCards = document.querySelectorAll('.vendor-card');
+
+        // Update Vendor 1
+        if (vendorCards[0]) {
+            const v1 = data.vendor1;
+            vendorCards[0].href = `https://wa.me/${v1.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+            vendorCards[0].querySelector('.vendor-avatar img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(v1.name)}&background=25D366&color=fff`;
+            vendorCards[0].querySelector('.vendor-info h3').textContent = v1.name;
+            vendorCards[0].querySelector('.vendor-role').textContent = v1.role;
+            vendorCards[0].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v1.phone}`;
+        }
+
+        // Update Vendor 2
+        if (vendorCards[1]) {
+            const v2 = data.vendor2;
+            vendorCards[1].href = `https://wa.me/${v2.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+            vendorCards[1].querySelector('.vendor-avatar img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(v2.name)}&background=25D366&color=fff`;
+            vendorCards[1].querySelector('.vendor-info h3').textContent = v2.name;
+            vendorCards[1].querySelector('.vendor-role').textContent = v2.role;
+            vendorCards[1].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v2.phone}`;
+        }
+
+        // Update Vendor 3
+        if (vendorCards[2]) {
+            const v3 = data.vendor3;
+            vendorCards[2].href = `https://wa.me/${v3.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+            vendorCards[2].querySelector('.vendor-avatar img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(v3.name)}&background=25D366&color=fff`;
+            vendorCards[2].querySelector('.vendor-info h3').textContent = v3.name;
+            vendorCards[2].querySelector('.vendor-role').textContent = v3.role;
+            vendorCards[2].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v3.phone}`;
+        }
+
+        // Update Vendor 4
+        if (vendorCards[3]) {
+            const v4 = data.vendor4;
+            vendorCards[3].href = `https://wa.me/${v4.phone}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+            vendorCards[3].querySelector('.vendor-avatar img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(v4.name)}&background=25D366&color=fff`;
+            vendorCards[3].querySelector('.vendor-info h3').textContent = v4.name;
+            vendorCards[3].querySelector('.vendor-role').textContent = v4.role;
+            vendorCards[3].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${v4.phone}`;
+        }
+
+        // Update Support
+        if (vendorCards[4]) {
+            const support = data.support;
+            vendorCards[4].href = `https://wa.me/${support.phone}?text=Hola,%20necesito%20ayuda%20con%20un%20reclamo%20o%20devolución`;
+            vendorCards[4].querySelector('.vendor-info h3').textContent = support.name;
+            vendorCards[4].querySelector('.vendor-role').textContent = support.role;
+            vendorCards[4].querySelector('.vendor-phone').innerHTML = `<i class="fa-brands fa-whatsapp"></i> +${support.phone}`;
+        }
+    }
+
+    // Load saved vendors data on page load
+    const savedVendors = localStorage.getItem('robcab-vendors');
+    if (savedVendors) {
+        const data = JSON.parse(savedVendors);
+
+        // Update form fields
+        if (document.getElementById('vendor1-name')) {
+            document.getElementById('vendor1-name').value = data.vendor1.name;
+            document.getElementById('vendor1-role').value = data.vendor1.role;
+            document.getElementById('vendor1-phone').value = data.vendor1.phone;
+
+            document.getElementById('vendor2-name').value = data.vendor2.name;
+            document.getElementById('vendor2-role').value = data.vendor2.role;
+            document.getElementById('vendor2-phone').value = data.vendor2.phone;
+
+            document.getElementById('vendor3-name').value = data.vendor3.name;
+            document.getElementById('vendor3-role').value = data.vendor3.role;
+            document.getElementById('vendor3-phone').value = data.vendor3.phone;
+
+            document.getElementById('vendor4-name').value = data.vendor4.name;
+            document.getElementById('vendor4-role').value = data.vendor4.role;
+            document.getElementById('vendor4-phone').value = data.vendor4.phone;
+
+            document.getElementById('support-name').value = data.support.name;
+            document.getElementById('support-role').value = data.support.role;
+            document.getElementById('support-phone').value = data.support.phone;
+        }
+
+        // Update contact modal
+        updateContactModal(data);
+    }
 });

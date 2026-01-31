@@ -1967,3 +1967,53 @@ input:checked+.slider:before {
         font-size: 1.5rem;
     }
 }
+
+/* Vendor Form Cards Styles */
+.vendor-form-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.vendor-form-card:hover {
+    border-color: #25D366;
+    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.1);
+}
+
+.support-form-card {
+    border-color: var(--accent);
+}
+
+.support-form-card:hover {
+    border-color: var(--highlight);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.1);
+}
+
+.vendor-form-card h4 {
+    color: #25D366;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.vendor-form-card h4 i {
+    font-size: 1.2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

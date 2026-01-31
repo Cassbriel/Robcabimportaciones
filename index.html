@@ -728,6 +728,128 @@
                             </div>
                             <button class="btn-primary-small">Guardar Configuración</button>
                         </div>
+
+                        <!-- WhatsApp Vendors Management -->
+                        <div class="form-container" style="margin-top: 40px;">
+                            <h3
+                                style="color: var(--highlight); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-brands fa-whatsapp"></i> Gestión de Vendedores WhatsApp
+                            </h3>
+                            <p style="color: var(--secondary-text); margin-bottom: 30px; font-size: 0.9em;">
+                                Configura los vendedores que aparecerán en el modal de cotización. Los números deben
+                                incluir el código de país (Ej: 51987654321).
+                            </p>
+
+                            <!-- Vendedor 1 -->
+                            <div class="vendor-form-card">
+                                <h4><i class="fa-solid fa-user"></i> Vendedor 1</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="vendor1-name" value="Carlos Rojas"
+                                            placeholder="Ej: Juan Pérez">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Rol/Cargo</label>
+                                        <input type="text" id="vendor1-role" value="Vendedor Senior"
+                                            placeholder="Ej: Gerente de Ventas">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de WhatsApp (con código país)</label>
+                                    <input type="tel" id="vendor1-phone" value="51987654321" placeholder="51987654321">
+                                </div>
+                            </div>
+
+                            <!-- Vendedor 2 -->
+                            <div class="vendor-form-card">
+                                <h4><i class="fa-solid fa-user"></i> Vendedor 2</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="vendor2-name" value="Ana Martínez"
+                                            placeholder="Ej: María García">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Rol/Cargo</label>
+                                        <input type="text" id="vendor2-role" value="Especialista en Instalaciones"
+                                            placeholder="Ej: Asesor Técnico">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de WhatsApp (con código país)</label>
+                                    <input type="tel" id="vendor2-phone" value="51912345678" placeholder="51912345678">
+                                </div>
+                            </div>
+
+                            <!-- Vendedor 3 -->
+                            <div class="vendor-form-card">
+                                <h4><i class="fa-solid fa-user"></i> Vendedor 3</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="vendor3-name" value="Luis Torres"
+                                            placeholder="Ej: Pedro Ramírez">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Rol/Cargo</label>
+                                        <input type="text" id="vendor3-role" value="Asesor Comercial"
+                                            placeholder="Ej: Consultor de Seguridad">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de WhatsApp (con código país)</label>
+                                    <input type="tel" id="vendor3-phone" value="51923456789" placeholder="51923456789">
+                                </div>
+                            </div>
+
+                            <!-- Vendedor 4 -->
+                            <div class="vendor-form-card">
+                                <h4><i class="fa-solid fa-user"></i> Vendedor 4</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="vendor4-name" value="María Flores"
+                                            placeholder="Ej: Laura Silva">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Rol/Cargo</label>
+                                        <input type="text" id="vendor4-role" value="Vendedora Regional"
+                                            placeholder="Ej: Ejecutiva de Cuentas">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de WhatsApp (con código país)</label>
+                                    <input type="tel" id="vendor4-phone" value="51934567890" placeholder="51934567890">
+                                </div>
+                            </div>
+
+                            <!-- Canal de Reclamos -->
+                            <div class="vendor-form-card support-form-card">
+                                <h4 style="color: var(--highlight);"><i class="fa-solid fa-headset"></i> Canal de
+                                    Reclamos y Devoluciones</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Título del Canal</label>
+                                        <input type="text" id="support-name" value="Soporte y Reclamos"
+                                            placeholder="Ej: Atención al Cliente">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        <input type="text" id="support-role" value="Devoluciones & Atención al Cliente"
+                                            placeholder="Ej: Reclamos y Garantías">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número de WhatsApp (con código país)</label>
+                                    <input type="tel" id="support-phone" value="51945678901" placeholder="51945678901">
+                                </div>
+                            </div>
+
+                            <button class="btn-primary-small" id="save-vendors-btn" style="margin-top: 20px;">
+                                <i class="fa-solid fa-save"></i> Guardar Vendedores
+                            </button>
+                        </div>
                     </div>
 
                 </div>
