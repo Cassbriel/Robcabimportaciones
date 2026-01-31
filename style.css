@@ -124,13 +124,76 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 30px;
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--text-color);
+    color: var(--highlight);
     letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+.logo:hover {
+    color: var(--highlight-hover);
+}
+
+/* Search Bar Main */
+.search-bar-main {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 8px 15px;
+    transition: var(--transition);
+}
+
+.search-bar-main:hover {
+    border-color: var(--highlight);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-icon {
+    color: var(--secondary-text);
+    margin-right: 12px;
+    font-size: 1rem;
+}
+
+.search-bar-main input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 8px 12px;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+}
+
+.search-bar-main input::placeholder {
+    color: var(--secondary-text);
+}
+
+.search-btn {
+    background: var(--highlight);
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: var(--highlight-hover);
+    transform: scale(1.05);
 }
 
 .nav-icons {
@@ -494,6 +557,24 @@ footer {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .search-bar-main {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .bar {
+        display: block;
+        width: 25px;
+        height: 3px;
+        margin: 5px auto;
+        -webkit-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        background-color: var(--text-color);
+    }
+
     .nav-links {
         position: fixed;
         right: -100%;
@@ -535,16 +616,6 @@ footer {
 
     .menu-toggle.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
-    }
-
-    .bar {
-        display: block;
-        width: 25px;
-        height: 3px;
-        margin: 5px auto;
-        -webkit-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
-        background-color: var(--text-color);
     }
 
     .hero-content {
