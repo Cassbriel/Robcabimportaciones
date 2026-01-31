@@ -17,6 +17,13 @@
 
 <body>
 
+    <!-- Top Announcement Bar -->
+    <div class="top-announcement" id="top-announcement">
+        <div class="container announcement-text" id="announcement-content">
+            <i class="fa-solid fa-bolt"></i> ¡Oferta! Instalación GRATIS por compra de Kit de 8 cámaras.
+        </div>
+    </div>
+
     <!-- Top Progress Bar -->
     <div class="scroll-progress-container">
         <div class="scroll-progress-bar" id="scroll-bar"></div>
@@ -60,9 +67,10 @@
         </div>
         <div class="container hero-content">
             <div class="hero-text">
-                <p class="hero-subtitle">BIENVENIDOS A LA NUEVA ERA</p>
-                <h1>ROBCAB <span class="highlight">2026</span></h1>
-                <p class="hero-description">CÁMARAS IMPORTADAS CON RESPALDO DE GARANTÍA MAESTRA</p>
+                <p class="hero-subtitle" id="hero-subtitle-text">BIENVENIDOS A LA NUEVA ERA</p>
+                <h1 id="hero-main-title">ROBCAB <span class="highlight">2026</span></h1>
+                <p class="hero-description" id="hero-description-text">CÁMARAS IMPORTADAS CON RESPALDO DE GARANTÍA
+                    MAESTRA</p>
                 <div class="hero-buttons">
                     <a href="#productos" class="btn-primary">EXPLORAR CATÁLOGO</a>
                 </div>
@@ -739,13 +747,17 @@
                                 <p style="color:#7d8590; margin-bottom:15px; font-size:0.9em;">Actualiza la imagen
                                     principal y el texto de bienvenida.</p>
                                 <div class="form-group">
+                                    <label>Frase Superior (Subtitle)</label>
+                                    <input type="text" id="admin-hero-subtitle" value="BIENVENIDOS A LA NUEVA ERA">
+                                </div>
+                                <div class="form-group">
                                     <label>Título Principal</label>
-                                    <input type="text" value="Seguridad Inteligente para tu Tranquilidad">
+                                    <input type="text" id="admin-hero-title" value="ROBCAB 2026">
                                 </div>
                                 <div class="form-group">
                                     <label>Frase Promocional</label>
-                                    <input type="text"
-                                        value="Protege lo que más importa con nuestras cámaras de seguridad de última generación.">
+                                    <input type="text" id="admin-hero-desc"
+                                        value="CÁMARAS IMPORTADAS CON RESPALDO DE GARANTÍA MAESTRA">
                                 </div>
                                 <div class="upload-area small">
                                     <i class="fa-solid fa-image"></i>
@@ -757,13 +769,13 @@
                                 <div class="form-group toggle-group">
                                     <label>Mostrar Barra Superior</label>
                                     <label class="switch">
-                                        <input type="checkbox" checked>
+                                        <input type="checkbox" id="admin-topbar-toggle" checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label>Texto del Anuncio</label>
-                                    <input type="text"
+                                    <input type="text" id="admin-topbar-text"
                                         value="¡Oferta! Instalación GRATIS por compra de Kit de 8 cámaras.">
                                 </div>
                             </div>
@@ -947,15 +959,17 @@
             <div class="vendors-grid">
                 <!-- Vendedor 1 -->
                 <a href="https://wa.me/51987654321?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad"
-                    target="_blank" class="vendor-card">
+                    target="_blank" class="vendor-card" id="vendor-link-1">
                     <div class="vendor-avatar">
-                        <img src="https://ui-avatars.com/api/?name=Carlos+Rojas&background=25D366&color=fff"
+                        <img id="vendor-img-1"
+                            src="https://ui-avatars.com/api/?name=Carlos+Rojas&background=25D366&color=fff"
                             alt="Vendedor 1">
                     </div>
                     <div class="vendor-info">
-                        <h3>Carlos Rojas</h3>
-                        <p class="vendor-role">Vendedor Senior</p>
-                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> +51 987 654 321</p>
+                        <h3 id="vendor-name-label-1">Carlos Rojas</h3>
+                        <p class="vendor-role" id="vendor-role-label-1">Vendedor Senior</p>
+                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> <span
+                                id="vendor-phone-label-1">+51 987 654 321</span></p>
                     </div>
                     <div class="vendor-action">
                         <i class="fa-solid fa-arrow-right"></i>
@@ -964,15 +978,17 @@
 
                 <!-- Vendedor 2 -->
                 <a href="https://wa.me/51912345678?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad"
-                    target="_blank" class="vendor-card">
+                    target="_blank" class="vendor-card" id="vendor-link-2">
                     <div class="vendor-avatar">
-                        <img src="https://ui-avatars.com/api/?name=Ana+Martinez&background=25D366&color=fff"
+                        <img id="vendor-img-2"
+                            src="https://ui-avatars.com/api/?name=Ana+Martinez&background=25D366&color=fff"
                             alt="Vendedor 2">
                     </div>
                     <div class="vendor-info">
-                        <h3>Ana Martínez</h3>
-                        <p class="vendor-role">Especialista en Instalaciones</p>
-                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> +51 912 345 678</p>
+                        <h3 id="vendor-name-label-2">Ana Martínez</h3>
+                        <p class="vendor-role" id="vendor-role-label-2">Especialista en Instalaciones</p>
+                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> <span
+                                id="vendor-phone-label-2">+51 912 345 678</span></p>
                     </div>
                     <div class="vendor-action">
                         <i class="fa-solid fa-arrow-right"></i>
@@ -981,15 +997,17 @@
 
                 <!-- Vendedor 3 -->
                 <a href="https://wa.me/51923456789?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad"
-                    target="_blank" class="vendor-card">
+                    target="_blank" class="vendor-card" id="vendor-link-3">
                     <div class="vendor-avatar">
-                        <img src="https://ui-avatars.com/api/?name=Luis+Torres&background=25D366&color=fff"
+                        <img id="vendor-img-3"
+                            src="https://ui-avatars.com/api/?name=Luis+Torres&background=25D366&color=fff"
                             alt="Vendedor 3">
                     </div>
                     <div class="vendor-info">
-                        <h3>Luis Torres</h3>
-                        <p class="vendor-role">Asesor Comercial</p>
-                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> +51 923 456 789</p>
+                        <h3 id="vendor-name-label-3">Luis Torres</h3>
+                        <p class="vendor-role" id="vendor-role-label-3">Asesor Comercial</p>
+                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> <span
+                                id="vendor-phone-label-3">+51 923 456 789</span></p>
                     </div>
                     <div class="vendor-action">
                         <i class="fa-solid fa-arrow-right"></i>
@@ -998,15 +1016,17 @@
 
                 <!-- Vendedor 4 -->
                 <a href="https://wa.me/51934567890?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad"
-                    target="_blank" class="vendor-card">
+                    target="_blank" class="vendor-card" id="vendor-link-4">
                     <div class="vendor-avatar">
-                        <img src="https://ui-avatars.com/api/?name=Maria+Flores&background=25D366&color=fff"
+                        <img id="vendor-img-4"
+                            src="https://ui-avatars.com/api/?name=Maria+Flores&background=25D366&color=fff"
                             alt="Vendedor 4">
                     </div>
                     <div class="vendor-info">
-                        <h3>María Flores</h3>
-                        <p class="vendor-role">Vendedora Regional</p>
-                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> +51 934 567 890</p>
+                        <h3 id="vendor-name-label-4">María Flores</h3>
+                        <p class="vendor-role" id="vendor-role-label-4">Vendedora Regional</p>
+                        <p class="vendor-phone"><i class="fa-brands fa-whatsapp"></i> <span
+                                id="vendor-phone-label-4">+51 934 567 890</span></p>
                     </div>
                     <div class="vendor-action">
                         <i class="fa-solid fa-arrow-right"></i>

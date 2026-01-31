@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('top-announcement')) {
+        document.body.classList.add('has-announcement');
+    }
+
     // Mobile Menu Toggle
     const menuToggle = document.getElementById('mobile-menu');
     const navLinks = document.querySelector('.nav-links');
@@ -178,20 +182,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmAllBtn.style.pointerEvents = 'none';
                 confirmAllBtn.style.opacity = '0.8';
 
-                // Simulate saving delay
+                // Real Sync Logic
+                const syncChanges = () => {
+                    // 1. Hero Content
+                    const heroSubtitle = document.getElementById('hero-subtitle-text');
+                    const heroTitle = document.getElementById('hero-main-title');
+                    const heroDesc = document.getElementById('hero-description-text');
+
+                    const adminHeroSubtitle = document.getElementById('admin-hero-subtitle');
+                    const adminHeroTitle = document.getElementById('admin-hero-title');
+                    const adminHeroDesc = document.getElementById('admin-hero-desc');
+
+                    if (heroSubtitle && adminHeroSubtitle) heroSubtitle.textContent = adminHeroSubtitle.value;
+                    if (heroTitle && adminHeroTitle) {
+                        const titleVal = adminHeroTitle.value;
+                        if (titleVal.includes('2026')) {
+                            heroTitle.innerHTML = titleVal.replace('2026', '<span class="highlight">2026</span>');
+                        } else {
+                            heroTitle.textContent = titleVal;
+                        }
+                    }
+                    if (heroDesc && adminHeroDesc) heroDesc.textContent = adminHeroDesc.value;
+
+                    // 2. Announcement Bar
+                    const annBar = document.getElementById('top-announcement');
+                    const annContent = document.getElementById('announcement-content');
+                    const adminAnnToggle = document.getElementById('admin-topbar-toggle');
+                    const adminAnnText = document.getElementById('admin-topbar-text');
+
+                    if (annBar && adminAnnToggle) {
+                        if (adminAnnToggle.checked) {
+                            annBar.style.display = 'block';
+                            document.body.classList.add('has-announcement');
+                        } else {
+                            annBar.style.display = 'none';
+                            document.body.classList.remove('has-announcement');
+                        }
+                    }
+                    if (annContent && adminAnnText) {
+                        annContent.innerHTML = `<i class="fa-solid fa-bolt"></i> ${adminAnnText.value}`;
+                    }
+
+                    // 3. Vendors Sync (Loops through 4 vendors)
+                    for (let i = 1; i <= 4; i++) {
+                        const adminName = document.getElementById(`vendor${i}-name`);
+                        const adminRole = document.getElementById(`vendor${i}-role`);
+                        const adminPhone = document.getElementById(`vendor${i}-phone`);
+
+                        const labelName = document.getElementById(`vendor-name-label-${i}`);
+                        const labelRole = document.getElementById(`vendor-role-label-${i}`);
+                        const labelPhone = document.getElementById(`vendor-phone-label-${i}`);
+                        const linkCard = document.getElementById(`vendor-link-${i}`);
+                        const imgElem = document.getElementById(`vendor-img-${i}`);
+
+                        if (adminName && labelName) labelName.textContent = adminName.value;
+                        if (adminRole && labelRole) labelRole.textContent = adminRole.value;
+                        if (adminPhone && labelPhone) labelPhone.textContent = `+${adminPhone.value}`;
+
+                        if (adminName && imgElem) {
+                            imgElem.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(adminName.value)}&background=25D366&color=fff`;
+                        }
+
+                        if (adminPhone && linkCard) {
+                            linkCard.href = `https://wa.me/${adminPhone.value.replace(/\s+/g, '')}?text=Hola,%20me%20interesa%20información%20sobre%20cámaras%20de%20seguridad`;
+                        }
+                    }
+                };
+
+                // Simulate saving delay and Apply changes
                 setTimeout(() => {
-                    confirmAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>¡GUARDADO!</span>';
+                    syncChanges();
+                    confirmAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>¡CAMBIOS APLICADOS!</span>';
                     confirmAllBtn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
 
-                    // Show a simple toast or alert if needed
-                    // In this case, just reset after a bit
                     setTimeout(() => {
                         confirmAllBtn.innerHTML = originalText;
                         confirmAllBtn.style.pointerEvents = 'auto';
                         confirmAllBtn.style.opacity = '1';
-                        confirmAllBtn.style.background = ''; // Back to CSS default
+                        confirmAllBtn.style.background = '';
                     }, 2000);
-                }, 1500);
+                }, 1000);
             });
         }
 
