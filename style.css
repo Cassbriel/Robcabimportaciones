@@ -196,7 +196,7 @@ h3 {
 /* Search Bar - Sci-Fi Style */
 .search-bar-main {
     flex: 1;
-    max-width: 700px;
+    max-width: 900px;
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.03);
