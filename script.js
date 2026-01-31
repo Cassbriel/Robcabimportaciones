@@ -85,27 +85,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Login Modal Logic
     const loginBtn = document.getElementById('login-btn');
+    const navbarLoginBtn = document.getElementById('navbar-login');
     const loginModal = document.getElementById('login-modal');
     const closeModalBtn = document.querySelector('.close-modal');
     const loginForm = document.getElementById('login-form');
 
-    if (loginBtn && loginModal && closeModalBtn) {
-        // Open Modal
-        loginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+    const openLoginModal = (e) => {
+        if (e) e.preventDefault();
+        if (loginModal) {
             loginModal.style.display = 'flex';
-            // Small delay to allow display:flex to apply before adding opacity class
             setTimeout(() => {
                 loginModal.classList.add('show');
             }, 10);
-        });
+        }
+    };
 
+    if (loginBtn) loginBtn.addEventListener('click', openLoginModal);
+    if (navbarLoginBtn) navbarLoginBtn.addEventListener('click', openLoginModal);
+
+    if (loginModal && closeModalBtn) {
         // Close Modal Function
         const closeModal = () => {
             loginModal.classList.remove('show');
             setTimeout(() => {
                 loginModal.style.display = 'none';
-            }, 300); // Wait for transition
+            }, 300);
         };
 
         // Close on X click
@@ -117,26 +121,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeModal();
             }
         });
+    }
 
-        // Handle Form Submit
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                // Simple check (accept any non-empty username for demo)
-                if (username) {
-                    // alert(`Bienvenido al Control Maestro, ${username}`); // Removed alert
-                    closeModal();
-                    loginForm.reset();
 
-                    // Show Admin Panel
-                    const adminPanel = document.getElementById('admin-panel');
-                    if (adminPanel) {
-                        adminPanel.classList.add('active');
-                    }
+
+    // Handle Form Submit
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            // Simple check (accept any non-empty username for demo)
+            if (username) {
+                // alert(`Bienvenido al Control Maestro, ${username}`); // Removed alert
+                closeModal();
+                loginForm.reset();
+
+                // Show Admin Panel
+                const adminPanel = document.getElementById('admin-panel');
+                if (adminPanel) {
+                    adminPanel.classList.add('active');
                 }
-            });
-        }
+            }
+        });
     }
 
     // Admin Panel Logic (Professional Version)
