@@ -591,8 +591,8 @@
                         </div>
 
                         <div class="users-grid">
-                            <!-- User Card 1 -->
-                            <div class="user-card">
+                            <!-- User Card 1 (Héctor - Hidden for privacy) -->
+                            <div class="user-card" id="hector-superadmin-card" style="display: none;">
                                 <div class="user-card-header">
                                     <img src="https://ui-avatars.com/api/?name=Hector+Robcab&background=d4af37&color=fff"
                                         alt="User">
@@ -609,9 +609,6 @@
                                         <span><i class="fa-solid fa-check"></i> Configuración</span>
                                         <span><i class="fa-solid fa-check"></i> Usuarios</span>
                                     </div>
-                                </div>
-                                <div class="user-actions">
-                                    <button class="btn-text">Editar Perfil</button>
                                 </div>
                             </div>
 
@@ -630,21 +627,45 @@
                                     style="display: none;">
                                     <h5>Gestionar Acceso (Solo Superadmin):</h5>
                                     <div class="form-group" style="margin-top: 10px;">
-                                        <label style="font-size: 0.8em; color: #7d8590;">Nuevo Usuario</label>
+                                        <label style="font-size: 0.8em; color: #7d8590;">Usuario</label>
                                         <input type="text" id="manage-admin-user" value="admin"
                                             style="padding: 8px; font-size: 0.9em;">
                                     </div>
                                     <div class="form-group" style="margin-top: 5px;">
-                                        <label style="font-size: 0.8em; color: #7d8590;">Nueva Contraseña</label>
+                                        <label style="font-size: 0.8em; color: #7d8590;">Contraseña</label>
                                         <input type="password" id="manage-admin-pass" value="admin123"
                                             style="padding: 8px; font-size: 0.9em;">
                                     </div>
+
+                                    <h5 style="margin-top: 15px;">Permisos del Administrador:</h5>
+                                    <div class="admin-perm-toggles"
+                                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                                        <label
+                                            style="font-size: 0.75em; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                            <input type="checkbox" class="admin-perm-check" value="inventory" checked>
+                                            Inventario
+                                        </label>
+                                        <label
+                                            style="font-size: 0.75em; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                            <input type="checkbox" class="admin-perm-check" value="orders" checked>
+                                            Pedidos
+                                        </label>
+                                        <label
+                                            style="font-size: 0.75em; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                            <input type="checkbox" class="admin-perm-check" value="content"> Contenido
+                                        </label>
+                                        <label
+                                            style="font-size: 0.75em; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                            <input type="checkbox" class="admin-perm-check" value="users"> Usuarios
+                                        </label>
+                                    </div>
+
                                     <button class="btn-primary-small" id="save-admin-creds"
-                                        style="margin-top: 10px; width: 100%;">Actualizar Acceso</button>
+                                        style="margin-top: 15px; width: 100%;">Guardar Cambios</button>
                                 </div>
                                 <div class="user-permissions" id="standard-admin-view">
-                                    <h5>Permisos:</h5>
-                                    <div class="permission-tags">
+                                    <h5>Permisos Actuales:</h5>
+                                    <div class="permission-tags" id="admin-permissions-display">
                                         <span><i class="fa-solid fa-check"></i> Inventario</span>
                                         <span><i class="fa-solid fa-check"></i> Pedidos</span>
                                         <span class="disabled"><i class="fa-solid fa-xmark"></i> Gestión Usuarios</span>

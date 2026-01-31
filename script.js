@@ -129,13 +129,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Admin Credentials from LocalStorage
     const getAdminCreds = () => {
         const saved = localStorage.getItem('robcab-admin-cfg');
-        return saved ? JSON.parse(saved) : { user: 'admin', pass: 'admin123' };
+        return saved ? JSON.parse(saved) : {
+            user: 'admin',
+            pass: 'admin123',
+            permissions: ['inventory', 'orders']
+        };
     };
 
-    // Sync admin label on load
-    const initialCreds = getAdminCreds();
-    const displayUserLabel = document.getElementById('display-admin-username');
-    if (displayUserLabel) displayUserLabel.textContent = initialCreds.user.toUpperCase();
+    // Sync admin info on load
+    const syncAdminDisplay = () => {
+        const creds = getAdminCreds();
+        const displayUserLabel = document.getElementById('display-admin-username');
+        if (displayUserLabel) displayUserLabel.textContent = creds.user.toUpperCase();
+
+        // Update tags in the user card
+        const tagsContainer = document.getElementById('admin-permissions-display');
+        if (tagsContainer) {
+            tagsContainer.innerHTML = '';
+            const allPerms = [
+                { id: 'inventory', label: 'Inventario' },
+                { id: 'orders', label: 'Pedidos' },
+                { id: 'content', label: 'Contenido' },
+                { id: 'users', label: 'Usuarios' }
+            ];
+            allPerms.forEach(p => {
+                const span = document.createElement('span');
+                const hasPerm = creds.permissions.includes(p.id);
+                if (hasPerm) {
+                    span.innerHTML = `<i class="fa-solid fa-check"></i> ${p.label}`;
+                } else {
+                    span.className = 'disabled';
+                    span.innerHTML = `<i class="fa-solid fa-xmark"></i> ${p.label}`;
+                }
+                tagsContainer.appendChild(span);
+            });
+        }
+    };
+    syncAdminDisplay();
 
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -174,27 +204,54 @@ document.addEventListener('DOMContentLoaded', () => {
         if (adminPanelElement) {
             adminPanelElement.classList.add('active');
 
-            // Toggle Superadmin-only UI
+            const adminCreds = getAdminCreds();
             const superadminControls = document.getElementById('superadmin-only-controls');
-            const standardView = document.getElementById('standard-admin-view');
+            const hectorCard = document.getElementById('hector-superadmin-card');
+
+            // Sidebar restriction for standard admin
+            const sidebarTabs = document.querySelectorAll('.sidebar-nav li');
 
             if (currentUser === 'hector') {
                 if (superadminControls) superadminControls.style.display = 'block';
-                // if (standardView) standardView.style.display = 'none';
+                if (hectorCard) hectorCard.style.display = 'block';
+
+                // Superadmin sees everything
+                sidebarTabs.forEach(t => t.style.display = 'flex');
+
+                // Sync Hector's management toggles
+                const manageUser = document.getElementById('manage-admin-user');
+                const managePass = document.getElementById('manage-admin-pass');
+                if (manageUser) manageUser.value = adminCreds.user;
+                if (managePass) managePass.value = adminCreds.pass;
+
+                document.querySelectorAll('.admin-perm-check').forEach(check => {
+                    check.checked = adminCreds.permissions.includes(check.value);
+                });
             } else {
                 if (superadminControls) superadminControls.style.display = 'none';
-                // if (standardView) standardView.style.display = 'block';
+                if (hectorCard) hectorCard.style.display = 'none';
+
+                // Admin restrictions
+                sidebarTabs.forEach(tab => {
+                    const tabId = tab.getAttribute('data-tab');
+                    if (tabId === 'settings') {
+                        tab.style.display = 'none'; // Only Hector sees global settings
+                    } else if (!adminCreds.permissions.includes(tabId) && tabId !== 'dashboard') {
+                        tab.style.display = 'none';
+                    } else {
+                        tab.style.display = 'flex';
+                    }
+                });
+
+                // Can Admin "Manage Roles" of others? (Ana/Juan)
+                const userActions = document.querySelectorAll('.user-card:not(#managed-admin-card) .user-actions');
+                const hasUserPerm = adminCreds.permissions.includes('users');
+                userActions.forEach(ua => {
+                    ua.style.display = hasUserPerm ? 'flex' : 'none';
+                });
             }
 
-            // Sync current admin info to inputs if Hector
-            const adminCreds = getAdminCreds();
-            const manageUser = document.getElementById('manage-admin-user');
-            const managePass = document.getElementById('manage-admin-pass');
-            const displayUserLabel = document.getElementById('display-admin-username');
-
-            if (manageUser) manageUser.value = adminCreds.user;
-            if (managePass) managePass.value = adminCreds.pass;
-            if (displayUserLabel) displayUserLabel.textContent = adminCreds.user.toUpperCase();
+            syncAdminDisplay();
         }
     }
 
@@ -761,12 +818,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const newUser = document.getElementById('manage-admin-user').value;
             const newPass = document.getElementById('manage-admin-pass').value;
 
-            if (newUser && newPass) {
-                localStorage.setItem('robcab-admin-cfg', JSON.stringify({ user: newUser, pass: newPass }));
-                const displayUserLabel = document.getElementById('display-admin-username');
-                if (displayUserLabel) displayUserLabel.textContent = newUser.toUpperCase();
+            // Collect selected permissions
+            const selectedPerms = [];
+            document.querySelectorAll('.admin-perm-check:checked').forEach(c => {
+                selectedPerms.push(c.value);
+            });
 
-                showToast('Éxito', 'Credenciales de Administrador actualizadas.', 'success');
+            if (newUser && newPass) {
+                localStorage.setItem('robcab-admin-cfg', JSON.stringify({
+                    user: newUser,
+                    pass: newPass,
+                    permissions: selectedPerms
+                }));
+
+                syncAdminDisplay();
+                showToast('Éxito', 'Configuración de Administrador actualizada.', 'success');
             } else {
                 showToast('Error', 'El usuario y contraseña no pueden estar vacíos.', 'warning');
             }
