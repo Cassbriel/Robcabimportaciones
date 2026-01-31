@@ -90,6 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalBtn = document.querySelector('.close-modal');
     const loginForm = document.getElementById('login-form');
 
+    const closeModal = () => {
+        if (loginModal) {
+            loginModal.classList.remove('show');
+            setTimeout(() => {
+                loginModal.style.display = 'none';
+            }, 300);
+        }
+    };
+
     const openLoginModal = (e) => {
         if (e) e.preventDefault();
         if (loginModal) {
@@ -104,39 +113,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navbarLoginBtn) navbarLoginBtn.addEventListener('click', openLoginModal);
 
     if (loginModal && closeModalBtn) {
-        // Close Modal Function
-        const closeModal = () => {
-            loginModal.classList.remove('show');
-            setTimeout(() => {
-                loginModal.style.display = 'none';
-            }, 300);
-        };
-
-        // Close on X click
         closeModalBtn.addEventListener('click', closeModal);
-
-        // Close on outside click
         window.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                closeModal();
-            }
+            if (e.target === loginModal) closeModal();
         });
     }
 
-
-
-    // Handle Form Submit
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
-            // Simple check (accept any non-empty username for demo)
             if (username) {
-                // alert(`Bienvenido al Control Maestro, ${username}`); // Removed alert
                 closeModal();
                 loginForm.reset();
-
-                // Show Admin Panel
                 const adminPanel = document.getElementById('admin-panel');
                 if (adminPanel) {
                     adminPanel.classList.add('active');
