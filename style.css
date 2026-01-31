@@ -1228,11 +1228,50 @@ footer {
     font-size: 1.2rem;
 }
 
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.btn-confirm-changes {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-confirm-changes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-confirm-changes i {
+    font-size: 1rem;
+}
+
+.btn-confirm-changes:active {
+    transform: scale(0.95);
+}
+
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     color: #e6edf3;
+    padding-left: 20px;
+    border-left: 1px solid #30363d;
 }
 
 .user-profile img {

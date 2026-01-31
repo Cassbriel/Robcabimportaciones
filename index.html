@@ -289,51 +289,58 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" placeholder="Buscar orden, producto...">
                     </div>
-                    <div class="user-profile">
-                        <div class="notifications" id="notifications-btn">
-                            <i class="fa-solid fa-bell"></i>
-                            <span class="badge-dot" id="notif-badge"></span>
+                    <div class="topbar-actions">
+                        <button id="confirm-all-changes" class="btn-confirm-changes">
+                            <i class="fa-solid fa-check-double"></i> <span>CONFIRMAR CAMBIOS</span>
+                        </button>
+                        <div class="user-profile">
+                            <div class="notifications" id="notifications-btn">
+                                <i class="fa-solid fa-bell"></i>
+                                <span class="badge-dot" id="notif-badge"></span>
 
-                            <!-- Notifications Dropdown -->
-                            <div class="notifications-dropdown" id="notifications-dropdown">
-                                <div class="dropdown-header">
-                                    <h4>Notificaciones</h4>
-                                    <span class="mark-read">Marcar leídas</span>
-                                </div>
-                                <ul class="notif-list">
-                                    <li class="notif-item unread">
-                                        <div class="notif-icon warning"><i class="fa-solid fa-triangle-exclamation"></i>
-                                        </div>
-                                        <div class="notif-text">
-                                            <p><strong>Stock Bajo:</strong> Disco Duro 2TB (0 un.)</p>
-                                            <span>Hace 10 min</span>
-                                        </div>
-                                    </li>
-                                    <li class="notif-item unread">
-                                        <div class="notif-icon info"><i class="fa-solid fa-file-invoice"></i></div>
-                                        <div class="notif-text">
-                                            <p><strong>Nuevo Pedido:</strong> #ORD-293 (Carlos M.)</p>
-                                            <span>Hace 2 horas</span>
-                                        </div>
-                                    </li>
-                                    <li class="notif-item">
-                                        <div class="notif-icon success"><i class="fa-solid fa-check-circle"></i></div>
-                                        <div class="notif-text">
-                                            <p><strong>Pago Recibido:</strong> Mantenimiento #ORD-280</p>
-                                            <span>Ayer</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="dropdown-footer">
-                                    <a href="#">Ver todas las notificaciones</a>
+                                <!-- Notifications Dropdown -->
+                                <div class="notifications-dropdown" id="notifications-dropdown">
+                                    <div class="dropdown-header">
+                                        <h4>Notificaciones</h4>
+                                        <span class="mark-read">Marcar leídas</span>
+                                    </div>
+                                    <ul class="notif-list">
+                                        <li class="notif-item unread">
+                                            <div class="notif-icon warning"><i
+                                                    class="fa-solid fa-triangle-exclamation"></i>
+                                            </div>
+                                            <div class="notif-text">
+                                                <p><strong>Stock Bajo:</strong> Disco Duro 2TB (0 un.)</p>
+                                                <span>Hace 10 min</span>
+                                            </div>
+                                        </li>
+                                        <li class="notif-item unread">
+                                            <div class="notif-icon info"><i class="fa-solid fa-file-invoice"></i></div>
+                                            <div class="notif-text">
+                                                <p><strong>Nuevo Pedido:</strong> #ORD-293 (Carlos M.)</p>
+                                                <span>Hace 2 horas</span>
+                                            </div>
+                                        </li>
+                                        <li class="notif-item">
+                                            <div class="notif-icon success"><i class="fa-solid fa-check-circle"></i>
+                                            </div>
+                                            <div class="notif-text">
+                                                <p><strong>Pago Recibido:</strong> Mantenimiento #ORD-280</p>
+                                                <span>Ayer</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="dropdown-footer">
+                                        <a href="#">Ver todas las notificaciones</a>
+                                    </div>
                                 </div>
                             </div>
+                            <img src="https://ui-avatars.com/api/?name=Admin+Robcab&background=d4af37&color=fff"
+                                alt="Administrador">
+                            <span>Gerencia</span>
+                            <button id="close-admin" class="close-admin-btn" title="Cerrar Panel"><i
+                                    class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <img src="https://ui-avatars.com/api/?name=Admin+Robcab&background=d4af37&color=fff"
-                            alt="Administrador">
-                        <span>Gerencia</span>
-                        <button id="close-admin" class="close-admin-btn" title="Cerrar Panel"><i
-                                class="fa-solid fa-xmark"></i></button>
                     </div>
                 </header>
 

@@ -169,6 +169,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        // Confirm All Changes Button Logic
+        const confirmAllBtn = document.getElementById('confirm-all-changes');
+        if (confirmAllBtn) {
+            confirmAllBtn.addEventListener('click', () => {
+                const originalText = confirmAllBtn.innerHTML;
+                confirmAllBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>GUARDANDO...</span>';
+                confirmAllBtn.style.pointerEvents = 'none';
+                confirmAllBtn.style.opacity = '0.8';
+
+                // Simulate saving delay
+                setTimeout(() => {
+                    confirmAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span>¡GUARDADO!</span>';
+                    confirmAllBtn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+
+                    // Show a simple toast or alert if needed
+                    // In this case, just reset after a bit
+                    setTimeout(() => {
+                        confirmAllBtn.innerHTML = originalText;
+                        confirmAllBtn.style.pointerEvents = 'auto';
+                        confirmAllBtn.style.opacity = '1';
+                        confirmAllBtn.style.background = ''; // Back to CSS default
+                    }, 2000);
+                }, 1500);
+            });
+        }
+
         // Close Admin (X)
         if (closeAdminBtn) {
             closeAdminBtn.addEventListener('click', () => {
