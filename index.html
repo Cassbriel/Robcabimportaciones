@@ -212,20 +212,17 @@
             <!-- Sidebar -->
             <aside class="admin-sidebar">
                 <div class="sidebar-header">
-                    <i class="fa-solid fa-shield-cat"></i>
-                    <span>ROBCAB Admin</span>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>ROBCAB ADMIN</span>
                 </div>
                 <nav class="sidebar-nav">
                     <ul>
-                        <li class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i>
-                            <span>Resumen</span>
-                        </li>
-                        <li data-tab="inventory"><i class="fa-solid fa-boxes-stacked"></i> <span>Inventario</span></li>
-                        <li data-tab="categories"><i class="fa-solid fa-tags"></i> <span>Categorías</span></li>
-                        <li data-tab="orders"><i class="fa-solid fa-file-invoice-dollar"></i> <span>Pedidos</span></li>
-                        <li data-tab="users"><i class="fa-solid fa-users-gear"></i> <span>Usuarios</span></li>
-                        <li data-tab="content"><i class="fa-solid fa-pen-to-square"></i> <span>Contenido Web</span></li>
-                        <li data-tab="settings"><i class="fa-solid fa-sliders"></i> <span>Ajustes</span></li>
+                        <li class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+                        <li data-tab="inventory"><i class="fa-solid fa-boxes-stacked"></i> Inventario</li>
+                        <li data-tab="categories"><i class="fa-solid fa-tags"></i> Categorías</li>
+                        <li data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> Pedidos</li>
+                        <li data-tab="content"><i class="fa-solid fa-pen-to-square"></i> Diseño Web</li>
+                        <li data-tab="users"><i class="fa-solid fa-users-gear"></i> Usuarios</li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
@@ -239,64 +236,24 @@
             <main class="admin-main">
                 <!-- Top Header -->
                 <header class="admin-topbar">
-                    <div class="toggle-sidebar">
-                        <i class="fa-solid fa-bars"></i>
-                    </div>
                     <div class="header-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Buscar orden, producto...">
+                        <input type="text" placeholder="Buscar en el panel...">
                     </div>
                     <div class="topbar-actions">
                         <button id="confirm-all-changes" class="btn-confirm-changes">
-                            <i class="fa-solid fa-check-double"></i> <span>CONFIRMAR CAMBIOS</span>
+                            <i class="fa-solid fa-check-double"></i> <span>APLICAR CAMBIOS</span>
                         </button>
                         <div class="user-profile">
                             <div class="notifications" id="notifications-btn">
                                 <i class="fa-solid fa-bell"></i>
                                 <span class="badge-dot" id="notif-badge"></span>
-
-                                <!-- Notifications Dropdown -->
-                                <div class="notifications-dropdown" id="notifications-dropdown">
-                                    <div class="dropdown-header">
-                                        <h4>Notificaciones</h4>
-                                        <span class="mark-read">Marcar leídas</span>
-                                    </div>
-                                    <ul class="notif-list">
-                                        <li class="notif-item unread">
-                                            <div class="notif-icon warning"><i
-                                                    class="fa-solid fa-triangle-exclamation"></i>
-                                            </div>
-                                            <div class="notif-text">
-                                                <p><strong>Stock Bajo:</strong> Disco Duro 2TB (0 un.)</p>
-                                                <span>Hace 10 min</span>
-                                            </div>
-                                        </li>
-                                        <li class="notif-item unread">
-                                            <div class="notif-icon info"><i class="fa-solid fa-file-invoice"></i></div>
-                                            <div class="notif-text">
-                                                <p><strong>Nuevo Pedido:</strong> #ORD-293 (Carlos M.)</p>
-                                                <span>Hace 2 horas</span>
-                                            </div>
-                                        </li>
-                                        <li class="notif-item">
-                                            <div class="notif-icon success"><i class="fa-solid fa-check-circle"></i>
-                                            </div>
-                                            <div class="notif-text">
-                                                <p><strong>Pago Recibido:</strong> Mantenimiento #ORD-280</p>
-                                                <span>Ayer</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="dropdown-footer">
-                                        <a href="#">Ver todas las notificaciones</a>
-                                    </div>
-                                </div>
                             </div>
                             <img src="https://ui-avatars.com/api/?name=Admin+Robcab&background=d4af37&color=fff"
-                                alt="Administrador">
-                            <span>Gerencia</span>
-                            <button id="close-admin" class="close-admin-btn" title="Cerrar Panel"><i
-                                    class="fa-solid fa-xmark"></i></button>
+                                alt="Admin">
+                            <span id="display-admin-username">GERENCIA</span>
+                            <button id="close-admin" class="btn-purchase"
+                                style="padding: 8px 15px; margin: 0; font-size: 0.7rem; min-width: auto;">Cerrar</button>
                         </div>
                     </div>
                 </header>
