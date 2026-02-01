@@ -31,175 +31,106 @@
 
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="container nav-container">
-            <div class="nav-left">
-                <a href="#" class="logo">ROBCAB<span class="logo-dot">.</span></a>
-            </div>
+        <a href="#" class="logo-link">
+            <h1>ROBCAB</h1>
+        </a>
 
-            <div class="search-bar-main">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="main-search-input"
-                    placeholder="Buscar cámaras de alta gama, kits DVR, accesorios...">
-                <button type="button" class="search-btn" id="main-search-btn">BUSCAR</button>
-                <div id="search-results-dropdown" class="search-results-dropdown"></div>
-            </div>
+        <div class="search-container">
+            <input type="text" id="main-search-input" placeholder="¿Qué estás buscando hoy para tu hogar?">
+            <div id="search-results-dropdown" class="search-results-dropdown"></div>
+        </div>
 
-            <div class="nav-actions">
-                <button class="btn-login" id="navbar-login">
-                    <i class="fa-solid fa-user-lock"></i> INGRESAR
-                </button>
-                <button class="btn-cotizar" id="navbar-cotizar">
-                    <i class="fa-solid fa-file-invoice-dollar"></i> COTIZAR
-                </button>
+        <div class="nav-actions">
+            <div class="nav-item-icon" id="navbar-login">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Acceso</span>
             </div>
-            <div class="menu-toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="cart-icon-container nav-item-icon">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span class="cart-badge">0</span>
             </div>
         </div>
     </nav>
 
+    <!-- Category Bar -->
+    <div class="category-bar">
+        <button class="cat-btn active" data-cat="all">
+            <i class="fa-solid fa-border-all"></i> TODO
+        </button>
+        <button class="cat-btn" data-cat="hogar">
+            <i class="fa-solid fa-house"></i> HOGAR
+        </button>
+        <button class="cat-btn" data-cat="camaras">
+            <i class="fa-solid fa-video"></i> SEGURIDAD
+        </button>
+        <button class="cat-btn" data-cat="jardineria">
+            <i class="fa-solid fa-leaf"></i> JARDÍN
+        </button>
+    </div>
+
     <!-- Hero Section -->
-    <header id="inicio" class="hero">
-        <div class="hero-glow"></div>
-        <div class="hero-lights">
-            <div class="light-orb"></div>
-            <div class="light-orb"></div>
-        </div>
-        <div class="container hero-content">
-            <div class="hero-text">
-                <p class="hero-subtitle" id="hero-subtitle-text">BIENVENIDOS A LA NUEVA ERA</p>
-                <h1 id="hero-main-title">ROBCAB <span class="highlight">2026</span></h1>
-                <p class="hero-description" id="hero-description-text">CÁMARAS IMPORTADAS CON RESPALDO DE GARANTÍA
-                    MAESTRA</p>
-                <div class="hero-buttons">
-                    <a href="#productos" class="btn-primary">EXPLORAR CATÁLOGO</a>
-                </div>
-            </div>
-
-            <!-- Product Cards in Hero -->
-            <div class="hero-products">
-                <div class="hero-product-card">
-                    <div class="product-img">
-                        <img src="escritorio_minimalista_pro_x_1769838877494.png" alt="Escritorio">
-                    </div>
-                    <h3>Escritorio Minimalista Pro X</h3>
-                </div>
-                <div class="hero-product-card">
-                    <div class="product-img">
-                        <img src="camara_dome_360_detallada_v2_1769839933380.png" alt="Cámara Dome">
-                    </div>
-                    <h3>Cámara Dome 360° Ultra</h3>
-                </div>
-                <div class="hero-product-card">
-                    <div class="product-img">
-                        <img src="camara_ip_pro_nuevo_1769838902218.png" alt="Cámara IP">
-                        <span class="badge">NUEVO</span>
-                    </div>
-                    <h3>Cameras Ip Pro</h3>
-                </div>
-                <div class="hero-product-card">
-                    <div class="product-img">
-                        <img src="kit_4_camaras_exterior_dvr_v2_1769839946537.png" alt="Kit Vigilancia">
-                    </div>
-                    <h3>Kit Vigilancia 4K</h3>
-                </div>
-            </div>
-        </div>
-    </header>>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <div class="section-header">
-                <h2>¿Por qué elegir ROBCAB?</h2>
-                <p>Tecnología de punta al servicio de tu seguridad.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fa-solid fa-eye"></i>
-                    <h3>Visión Nocturna HD</h3>
-                    <p>Claridad total incluso en la oscuridad absoluta con tecnología infrarroja avanzada.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    <h3>Acceso Remoto</h3>
-                    <p>Monitorea tu hogar o negocio desde cualquier lugar con nuestra app móvil.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <h3>Detección de Movimiento</h3>
-                    <p>Alertas instantáneas a tu dispositivo cuando se detecta actividad sospechosa.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <h3>Almacenamiento en la Nube</h3>
-                    <p>Guarda tus grabaciones de forma segura y accede a ellas cuando lo necesites.</p>
-                </div>
+    <section id="inicio" class="hero">
+        <div class="hero-box">
+            <p class="hero-subtitle">BIENVENIDO A LA NUEVA ERA</p>
+            <h2>ROBCAB 2026</h2>
+            <p>CALIDAD IMPORTADA CON RESPALDO DE GARANTÍA MAESTRA</p>
+            <div class="hero-buttons">
+                <a href="#productos" class="btn-purchase">EXPLORAR CATÁLOGO <i class="fa-solid fa-arrow-down"></i></a>
             </div>
         </div>
     </section>
 
-    <!-- Products Preview -->
+    <!-- Products Section -->
     <section id="productos" class="products">
         <div class="container">
-            <div class="section-header">
-                <h2>Nuestros Productos Destacados</h2>
+            <div class="section-header" style="text-align: center; margin-bottom: 50px;">
+                <h2 style="font-size: 2.5rem; color: var(--gold-glow);">Nuestras Ofertas Destacadas</h2>
             </div>
-            <div class="product-grid">
+
+            <div class="p-grid">
                 <!-- Product 1 -->
-                <div class="product-card"
-                    data-description="Cámara de seguridad tipo domo con rotación de 360°, resolución Full HD y visión nocturna infrarroja. Ideal para vigilar amplias áreas interiores con control total desde tu celular."
-                    data-features="Rotación 360° PTZ|Audio bidireccional|Grabación en MicroSD|Visión nocturna 10m"
-                    data-tag="MÁS VENDIDO">
-                    <div class="product-image">
-                        <img src="camara_dome_360_detallada_v2_1769839933380.png" alt="Cámara Dome 360°">
-                        <div class="product-overlay">
-                            <button class="btn-view-details">VISTA RÁPIDA</button>
+                <div class="p-card" data-cat="camaras"
+                    data-description="Cámara de seguridad tipo domo 360° con resolución Full HD y visión nocturna infrarroja. Ideal para vigilar amplias áreas interiores con control total desde tu celular.">
+                    <div class="p-content">
+                        <div class="p-img-box">
+                            <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop"
+                                alt="Cámara Dome 360°">
                         </div>
-                    </div>
-                    <div class="product-info">
                         <h3>Cámara Dome 360°</h3>
-                        <p class="price">S/ 150.00</p>
-                        <a href="#" class="btn-text open-product-detail">Ver Detalles <i
-                                class="fa-solid fa-arrow-right"></i></a>
+                        <p class="price-neon">S/ 150.00</p>
+                        <button class="btn-purchase open-product-detail">Ver Detalles</button>
                     </div>
+                    <span class="badge">MÁS VENDIDO</span>
                 </div>
+
                 <!-- Product 2 -->
-                <div class="product-card"
-                    data-description="Kit completo de seguridad para exteriores que incluye 4 cámaras resistentes al agua (IP66), grabador DVR de 4 canales y cables de instalación. Resolución nítida para protección perimetral."
-                    data-features="Resistencia IP66|Detección de movimiento|Salida HDMI/VGA|App móvil gratuita"
-                    data-tag="KIT PROFESIONAL">
-                    <div class="product-image">
-                        <img src="kit_4_camaras_exterior_dvr_v2_1769839946537.png" alt="Kit Exterior">
-                        <div class="product-overlay">
-                            <button class="btn-view-details">VISTA RÁPIDA</button>
+                <div class="p-card" data-cat="camaras"
+                    data-description="Kit completo de seguridad para exteriores que incluye 4 cámaras resistentes al agua (IP66), grabador DVR de 4 canales y cables de instalación.">
+                    <div class="p-content">
+                        <div class="p-img-box">
+                            <img src="https://images.unsplash.com/photo-1524143878510-e3b8d6312402?q=80&w=500&auto=format&fit=crop"
+                                alt="Kit Exterior">
                         </div>
-                    </div>
-                    <div class="product-info">
                         <h3>Kit Exterior 4 Cámaras</h3>
-                        <p class="price">S/ 580.00</p>
-                        <a href="#" class="btn-text open-product-detail">Ver Detalles <i
-                                class="fa-solid fa-arrow-right"></i></a>
+                        <p class="price-neon">S/ 580.00</p>
+                        <button class="btn-purchase open-product-detail">Ver Detalles</button>
                     </div>
+                    <span class="badge">KIT PRO</span>
                 </div>
+
                 <!-- Product 3 -->
-                <div class="product-card"
-                    data-description="Cámara IP compacta con conexión WiFi de alta estabilidad. Integra detección de humanos con IA para reducir falsas alarmas y notificación push inmediata al smartphone."
-                    data-features="WiFi 2.4GHz|IA Humanoide|Alarma integrada|Soporta Cloud Storage" data-tag="NUEVO">
-                    <div class="product-image">
-                        <img src="camara_ip_pro_nuevo_1769838902218.png" alt="Cámara IP">
-                        <div class="product-overlay">
-                            <button class="btn-view-details">VISTA RÁPIDA</button>
+                <div class="p-card" data-cat="hogar"
+                    data-description="Enchufe inteligente WiFi para control remoto de tus electrodomésticos desde el celular. Compatible con Alexa y Google Home.">
+                    <div class="p-content">
+                        <div class="p-img-box">
+                            <img src="https://images.unsplash.com/photo-1558002038-103318286958?q=80&w=500&auto=format&fit=crop"
+                                alt="Smart Plug">
                         </div>
+                        <h3>Enchufe Smart WiFi</h3>
+                        <p class="price-neon">S/ 45.00</p>
+                        <button class="btn-purchase open-product-detail">Ver Detalles</button>
                     </div>
-                    <div class="product-info">
-                        <h3>Cámara IP WiFi</h3>
-                        <p class="price">S/ 120.00</p>
-                        <a href="#" class="btn-text open-product-detail">Ver Detalles <i
-                                class="fa-solid fa-arrow-right"></i></a>
-                    </div>
+                    <span class="badge">NUEVO</span>
                 </div>
             </div>
         </div>
@@ -207,56 +138,70 @@
 
     <!-- Footer -->
     <footer>
-        <div class="container footer-content">
+        <div class="container footer-content"
+            style="padding: 60px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; border-top: 1px solid var(--luxury-brown);">
             <div class="footer-brand">
-                <h2>ROBCAB<span class="highlight">.</span></h2>
-                <p>Tu socio confiable en seguridad electrónica.</p>
+                <h2 style="font-family: 'Syncopate', sans-serif; letter-spacing: 3px; color: var(--neon-gold);">ROBCAB
+                </h2>
+                <p style="opacity: 0.6; margin-top: 15px;">Tu socio confiable en seguridad electrónica y gadgets para el
+                    hogar.</p>
             </div>
             <div class="footer-links">
-                <h3>Enlaces Rápidos</h3>
-                <ul>
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#productos">Productos</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                <h3 style="margin-bottom: 20px; color: var(--gold-glow);">Enlaces Rápidos</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;"><a href="#inicio"
+                            style="color: #aaa; text-decoration: none;">Inicio</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#productos"
+                            style="color: #aaa; text-decoration: none;">Productos</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#servicios"
+                            style="color: #aaa; text-decoration: none;">Servicios</a></li>
+                    <li style="margin-bottom: 10px;"><a href="#contacto"
+                            style="color: #aaa; text-decoration: none;">Contacto</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h3>Contáctanos</h3>
-                <p><i class="fa-solid fa-phone"></i> +51 987 654 321</p>
-                <p><i class="fa-solid fa-envelope"></i> ventas@robcab.com</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                <h3 style="margin-bottom: 20px; color: var(--gold-glow);">Contáctanos</h3>
+                <p style="color: #aaa; margin-bottom: 10px;"><i class="fa-solid fa-phone"
+                        style="color: var(--neon-gold);"></i> +51 987 654 321</p>
+                <p style="color: #aaa; margin-bottom: 20px;"><i class="fa-solid fa-envelope"
+                        style="color: var(--neon-gold);"></i> ventas@robcab.com</p>
+                <div class="social-icons" style="display: flex; gap: 15px;">
+                    <a href="#" style="color: white; font-size: 1.5rem;"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: white; font-size: 1.5rem;"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" style="color: white; font-size: 1.5rem;"><i class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 ROBCAB Importaciones. Todos los derechos reservados.</p>
+        <div class="footer-bottom"
+            style="text-align: center; padding: 20px; background: #000; border-top: 1px solid #111; font-size: 0.8rem; color: #555;">
+            <p>&copy; 2026 ROBCAB Importaciones. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2>RobCab</h2>
-                <p>Acceso restringido a administradores</p>
+            <span class="close-modal"
+                style="position: absolute; right: 25px; top: 20px; font-size: 1.5rem; cursor: pointer; color: #555;">&times;</span>
+            <div class="modal-header" style="text-align: center; margin-bottom: 30px;">
+                <h2 style="font-family: 'Syncopate', sans-serif; color: var(--neon-gold);">RobCab</h2>
+                <p style="opacity: 0.6; font-size: 0.8rem;">Acceso restringido a administradores</p>
             </div>
             <form id="login-form">
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="username" placeholder="Usuario" required>
+                <div class="input-group" style="margin-bottom: 20px; position: relative;">
+                    <i class="fa-solid fa-user"
+                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--luxury-brown);"></i>
+                    <input type="text" id="username" placeholder="Usuario" required
+                        style="width: 100%; padding: 15px 15px 15px 45px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none;">
                 </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="password" placeholder="Contraseña" required>
-                    <i class="fa-solid fa-eye toggle-password" id="toggle-password-btn"
-                        style="cursor: pointer; opacity: 0.6; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); transition: 0.3s;"></i>
+                <div class="input-group" style="margin-bottom: 30px; position: relative;">
+                    <i class="fa-solid fa-lock"
+                        style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--luxury-brown);"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required
+                        style="width: 100%; padding: 15px 15px 15px 45px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; outline: none;">
                 </div>
-                <button type="submit" class="btn-primary full-width">Ingresar al Sistema</button>
+                <button type="submit" class="btn-purchase" style="width: 100%; padding: 15px;">Ingresar al
+                    Sistema</button>
             </form>
         </div>
     </div>

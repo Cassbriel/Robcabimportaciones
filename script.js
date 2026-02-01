@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('main-search-input');
     const searchBtn = document.getElementById('main-search-btn');
     const searchDropdown = document.getElementById('search-results-dropdown');
-    const allProducts = document.querySelectorAll('.product-card');
+    const allProducts = document.querySelectorAll('.p-card');
 
     const updateSearch = () => {
         const query = searchInput.value.toLowerCase().trim();
@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Filter visible products on page
         allProducts.forEach(card => {
             const title = card.querySelector('h3').textContent.toLowerCase();
-            const desc = card.getAttribute('data-description').toLowerCase();
+            const desc = card.getAttribute('data-description') ? card.getAttribute('data-description').toLowerCase() : "";
             if (title.includes(query) || desc.includes(query)) {
                 card.style.display = 'block';
                 setTimeout(() => card.style.opacity = '1', 10);
@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let matches = [];
         allProducts.forEach(card => {
             const title = card.querySelector('h3').textContent;
-            const price = card.querySelector('.price').textContent;
+            const price = (card.querySelector('.price-neon') || card.querySelector('.price')).textContent;
             const imgSrc = card.querySelector('img').src;
             const desc = card.getAttribute('data-description') || "";
 
@@ -833,6 +833,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (searchBtn) {
         searchBtn.addEventListener('click', updateSearch);
+    }
+
+    // Category Filtering Logic
+    const catBtns = document.querySelectorAll('.cat-btn');
+    if (catBtns.length > 0) {
+        catBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cat = btn.getAttribute('data-cat');
+
+                // Update active state
+                catBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter products
+                allProducts.forEach(p => {
+                    const productCat = p.getAttribute('data-cat');
+                    if (cat === 'all' || productCat === cat) {
+                        p.style.display = 'block';
+                        setTimeout(() => p.style.opacity = '1', 10);
+                    } else {
+                        p.style.opacity = '0';
+                        setTimeout(() => p.style.display = 'none', 300);
+                    }
+                });
+            });
+        });
     }
 
     // Managed Admin Credentials Save (Hector Only)
