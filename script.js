@@ -2,134 +2,143 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
     // 1. GLOBAL STATE & SELECTORS
     // ---------------------------------------------------------
-    let currentUser = null; // 'hector' or 'admin'
-    const navbar = document.querySelector('.navbar');
-    const loginModal = document.getElementById('login-modal');
-    const loginForm = document.getElementById('login-form');
-    const adminPanel = document.getElementById('admin-panel');
     const searchInput = document.getElementById('main-search-input');
     const searchDropdown = document.getElementById('search-results-dropdown');
     const allProducts = document.querySelectorAll('.p-card');
 
+    // Dropdown Selectors
+    const dropdownBtn = document.getElementById('cat-dropdown-toggle');
+    const dropdownList = document.getElementById('cat-dropdown-list');
+    const catBtns = document.querySelectorAll('.cat-btn-drop');
+
     // ---------------------------------------------------------
-    // 2. AUTH & LOGIN LOGIC
+    // 2. DROPDOWN INTERACTION
     // ---------------------------------------------------------
-    const getAdminCreds = () => {
-        const saved = localStorage.getItem('robcab-admin-cfg');
-        const defaultCreds = {
-            user: 'admin',
-            pass: 'admin123',
-            permissions: ['inventory', 'orders']
-        };
-        if (!saved) return defaultCreds;
-        try {
-            const parsed = JSON.parse(saved);
-            if (!parsed.permissions) parsed.permissions = defaultCreds.permissions;
-            return parsed;
-        } catch (e) { return defaultCreds; }
-    };
-
-    const syncAdminDisplay = () => {
-        const creds = getAdminCreds();
-        const displayUserLabel = document.getElementById('display-admin-username');
-        if (displayUserLabel) displayUserLabel.textContent = creds.user.toUpperCase();
-
-        const tagsContainer = document.getElementById('admin-permissions-display');
-        if (tagsContainer) {
-            tagsContainer.innerHTML = '';
-            const allPerms = [
-                { id: 'inventory', label: 'Inventario' },
-                { id: 'orders', label: 'Pedidos' },
-                { id: 'content', label: 'Contenido' },
-                { id: 'users', label: 'Usuarios' }
-            ];
-            allPerms.forEach(p => {
-                const span = document.createElement('span');
-                const hasPerm = creds.permissions.includes(p.id);
-                if (hasPerm) {
-                    span.innerHTML = `<i class="fa-solid fa-check"></i> ${p.label}`;
-                } else {
-                    span.className = 'disabled';
-                    span.innerHTML = `<i class="fa-solid fa-xmark"></i> ${p.label}`;
-                }
-                tagsContainer.appendChild(span);
-            });
-        }
-    };
-
-    const openLoginModal = (e) => {
-        if (e) e.preventDefault();
-        if (loginModal) {
-            loginModal.style.display = 'flex';
-            setTimeout(() => loginModal.classList.add('active'), 10);
-        }
-    };
-
-    const closeModal = () => {
-        if (loginModal) {
-            loginModal.classList.remove('active');
-            setTimeout(() => loginModal.style.display = 'none', 300);
-        }
-    };
-
-    const enterAdminPanel = () => {
-        closeModal();
-        if (loginForm) loginForm.reset();
-        if (adminPanel) {
-            adminPanel.classList.add('active');
-            const adminCreds = getAdminCreds();
-            const superadminControls = document.getElementById('superadmin-only-controls');
-            const hectorCard = document.getElementById('hector-superadmin-card');
-            const sidebarTabs = document.querySelectorAll('.sidebar-nav li');
-
-            if (currentUser === 'hector') {
-                if (superadminControls) superadminControls.style.display = 'block';
-                if (hectorCard) hectorCard.style.display = 'block';
-                sidebarTabs.forEach(t => t.style.display = 'flex');
+    if (dropdownBtn && dropdownList) {
+        // Toggle Dropdown
+        dropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownList.classList.toggle('active');
+            const icon = dropdownBtn.querySelector('i');
+            if (dropdownList.classList.contains('active')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
             } else {
-                if (superadminControls) superadminControls.style.display = 'none';
-                if (hectorCard) hectorCard.style.display = 'none';
-                sidebarTabs.forEach(tab => {
-                    const tabId = tab.getAttribute('data-tab');
-                    if (tabId === 'settings') tab.style.display = 'none';
-                    else if (!adminCreds.permissions.includes(tabId) && tabId !== 'dashboard') tab.style.display = 'none';
-                    else tab.style.display = 'flex';
-                });
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
             }
-            syncAdminDisplay();
-        }
-    };
+        });
 
-    // Event Listeners for Login
-    const navbarLoginBtn = document.getElementById('navbar-login');
-    if (navbarLoginBtn) navbarLoginBtn.addEventListener('click', openLoginModal);
-
-    const closeModalBtn = document.querySelector('.close-modal');
-    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username')?.value;
-            const password = document.getElementById('password')?.value;
-            const adminCreds = getAdminCreds();
-
-            if (username === 'Hector' && password === 'Cassiel') {
-                currentUser = 'hector';
-                showToast('Acceso Superadmin', 'Bienvenido, Héctor. Control total activado.', 'success');
-                enterAdminPanel();
-            } else if (username === adminCreds.user && password === adminCreds.pass) {
-                currentUser = 'admin';
-                showToast('Acceso Administrador', `Bienvenido, ${username}.`, 'success');
-                enterAdminPanel();
-            } else {
-                showToast('Error de Acceso', 'Usuario o contraseña incorrectos.', 'warning');
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdownBtn.contains(e.target) && !dropdownList.contains(e.target)) {
+                dropdownList.classList.remove('active');
+                const icon = dropdownBtn.querySelector('i');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
             }
         });
     }
 
     // ---------------------------------------------------------
-    // 3. SEARCH & FILTER LOGIC
+    // 3. CATEGORY FILTERING
+    // ---------------------------------------------------------
+    // ---------------------------------------------------------
+    // 3. CATEGORY LOGIC (Navigation & Filtering)
+    // ---------------------------------------------------------
+    const normalize = (str) => {
+        return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+
+    // Helper: Apply Filter
+    const applyFilter = (cat) => {
+        // Update Title if on category page
+        const titleEl = document.getElementById('category-title');
+        if (titleEl) {
+            titleEl.textContent = (cat === 'all' || cat === 'todo' || cat === 'ver todo') ? 'Todos los Productos' : cat;
+        }
+
+        allProducts.forEach(p => {
+            const productCat = p.getAttribute('data-cat');
+            // Check for match
+            if (cat === 'all' || cat === 'todo' || cat === 'ver todo' || productCat === cat) {
+                p.style.display = 'block';
+                setTimeout(() => p.style.opacity = '1', 10);
+            } else {
+                p.style.opacity = '0';
+                setTimeout(() => p.style.display = 'none', 300);
+            }
+        });
+    }
+
+    // Check if we are on the category page
+    const isCategoryPage = window.location.pathname.includes('category.html');
+
+    // Initial Load for Category Page
+    if (isCategoryPage) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialCat = urlParams.get('cat');
+        if (initialCat) {
+            applyFilter(initialCat);
+            // Highlight button
+            catBtns.forEach(b => {
+                let c = b.getAttribute('data-cat') || normalize(b.textContent.trim());
+                if (c === initialCat) b.classList.add('active');
+            });
+        }
+    }
+
+    // Event Listeners for Buttons
+    catBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let cat = btn.getAttribute('data-cat');
+            if (!cat) {
+                cat = normalize(btn.textContent.trim());
+            }
+
+            if (isCategoryPage) {
+                // If already on page, just filter
+                catBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                applyFilter(cat);
+
+                // Update URL without reload
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('cat', cat);
+                window.history.pushState({}, '', newUrl);
+
+                // Close dropdown
+                if (dropdownList) {
+                    dropdownList.classList.remove('active');
+                    /* Reset icon if needed */
+                }
+
+            } else {
+                // If on Home (index.html), redirect
+                window.location.href = `category.html?cat=${cat}`;
+            }
+        });
+    });
+
+    // Make Logo reset categories
+    const logoLink = document.querySelector('.logo-link');
+    if (logoLink) {
+        logoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            catBtns.forEach(b => b.classList.remove('active'));
+            // Reset Dropdown selection visual if needed
+
+            // Show all products
+            allProducts.forEach(p => {
+                p.style.display = 'block';
+                setTimeout(() => p.style.opacity = '1', 10);
+            });
+        });
+    }
+
+    // ---------------------------------------------------------
+    // 4. SEARCH & FILTER LOGIC
     // ---------------------------------------------------------
     const updateSearch = () => {
         const query = searchInput.value.toLowerCase().trim();
@@ -196,60 +205,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Category Filtering
-    const catBtns = document.querySelectorAll('.cat-btn');
-    catBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const cat = btn.getAttribute('data-cat');
-            catBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            allProducts.forEach(p => {
-                const productCat = p.getAttribute('data-cat');
-                if (cat === 'all' || productCat === cat) {
-                    p.style.display = 'block';
-                    setTimeout(() => p.style.opacity = '1', 10);
-                } else {
-                    p.style.opacity = '0';
-                    setTimeout(() => p.style.display = 'none', 300);
-                }
-            });
-        });
-    });
-
     // ---------------------------------------------------------
-    // 4. ADMIN PANEL INTERACTIVITY
+    // 5. UTILS & MODALS
     // ---------------------------------------------------------
-    if (adminPanel) {
-        const sidebarItems = document.querySelectorAll('.sidebar-nav li');
-        const adminTabs = document.querySelectorAll('.admin-tab');
-        const closeAdminBtn = document.getElementById('close-admin');
 
-        sidebarItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const targetId = item.getAttribute('data-tab');
-                if (!targetId) return;
+    // Handing Asesor / Contact Modal
+    const asesorBtn = document.getElementById('asesor-btn');
+    const contactModal = document.getElementById('contact-modal');
+    const closeContactModal = document.getElementById('close-contact-modal');
 
-                sidebarItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-
-                adminTabs.forEach(tab => {
-                    tab.classList.remove('active');
-                    if (tab.id === `tab-${targetId}`) tab.classList.add('active');
-                });
-            });
+    if (asesorBtn && contactModal) {
+        asesorBtn.addEventListener('click', () => {
+            contactModal.style.display = 'flex';
+            setTimeout(() => contactModal.classList.add('active'), 10);
         });
-
-        if (closeAdminBtn) {
-            closeAdminBtn.addEventListener('click', () => {
-                adminPanel.classList.remove('active');
-            });
-        }
     }
 
-    // ---------------------------------------------------------
-    // 5. UTILS & TOASTS
-    // ---------------------------------------------------------
+    if (closeContactModal && contactModal) {
+        closeContactModal.addEventListener('click', () => {
+            contactModal.classList.remove('active');
+            setTimeout(() => contactModal.style.display = 'none', 300);
+        });
+    }
+
+    // Close modal on outside click
+    window.addEventListener('click', (e) => {
+        if (contactModal && e.target === contactModal) {
+            contactModal.classList.remove('active');
+            setTimeout(() => contactModal.style.display = 'none', 300);
+        }
+    });
+
     function showToast(title, message, type = 'info') {
         let container = document.getElementById('toast-container');
         if (!container) {
@@ -269,7 +255,4 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => toast.remove(), 500);
         }, 4000);
     }
-
-    // Initialize display
-    syncAdminDisplay();
 });
