@@ -864,4 +864,43 @@ body {
         font-size: 1.8rem !important;
         /* Force smaller header */
     }
+
+    /* --- Category Dropdown Mobile Optimization --- */
+    .category-dropdown-container {
+        width: auto;
+        /* Allow it to shrink */
+    }
+
+    .dropdown-btn {
+        padding: 5px 10px;
+        font-size: 0.65rem;
+        /* Very small text */
+        gap: 5px;
+        border-width: 1px;
+        height: 32px;
+        /* Fixed small height */
+    }
+
+    .dropdown-content {
+        width: 95vw;
+        left: 50%;
+        transform: translateX(-50%);
+        /* Center on screen */
+        top: 50px;
+        padding: 15px;
+        /* Reducing padding */
+        grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+        /* 3-4 items per row */
+        gap: 8px;
+    }
+
+    .cat-btn-drop {
+        font-size: 0.6rem;
+        /* Tiny text for grid */
+        padding: 6px 2px;
+        border-radius: 6px;
+        white-space: normal;
+        /* Allow text wrapping if needed */
+        line-height: 1.2;
+    }
 }
