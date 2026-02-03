@@ -716,57 +716,152 @@ body {
     transform: translateX(3px);
 }
 
-/* --- Mobile Responsiveness for Navbar & Styles --- */
+/* --- Mobile Responsiveness (Optimized for Compactness) --- */
 @media (max-width: 900px) {
+
+    /* Navbar Adjustment */
     .navbar {
         flex-wrap: wrap;
-        gap: 15px;
-        padding: 15px 20px;
+        gap: 10px;
+        padding: 10px 15px;
+        /* Reduced Padding */
     }
 
     .logo-link h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        /* Smaller Logo */
+        letter-spacing: 2px;
     }
 
-    /* Stack Category button below logo or beside it but smaller */
+    /* Category Button */
     .category-dropdown-container {
         margin: 0;
         order: 2;
-        /* Flexible ordering */
     }
 
     .dropdown-btn {
-        padding: 8px 15px;
+        padding: 6px 14px;
+        /* Smaller button */
         font-size: 0.7rem;
+        gap: 6px;
     }
 
-    /* Search bar takes full width on new line */
+    /* Search Bar */
     .search-container {
         order: 3;
         flex: 1 1 100%;
         margin: 5px 0 0 0;
-        max-width: 100%;
+    }
+
+    .search-container input {
+        padding: 10px 20px;
+        /* Reduced height */
+        font-size: 0.9rem;
+        /* Smaller text */
     }
 
     .nav-actions {
         order: 2;
-        /* Alongside category button if fits, or 3 */
-        gap: 15px;
+        gap: 10px;
     }
 }
 
 @media (max-width: 600px) {
+
+    /* General Scaledown for Mobile */
+    body {
+        font-size: 14px;
+        /* Base font reduction */
+    }
+
+    /* Hero Section Compact */
+    .hero {
+        padding-top: 100px;
+        min-height: 50vh;
+        /* Shorter hero */
+        padding-bottom: 30px;
+    }
+
+    .hero-box h2 {
+        font-size: 2.2rem;
+        /* Much smaller hero text */
+        letter-spacing: -1px;
+        margin-bottom: 15px;
+    }
+
+    .hero-box p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-purchase {
+        padding: 10px 24px;
+        font-size: 0.8rem;
+    }
+
+    /* Product Grid Compact */
+    .p-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 items per row if possible */
+        gap: 15px;
+        padding: 30px 15px;
+    }
+
+    /* If screen is VERY small < 350px, back to 1 column, handled by auto-fill usually but forcing 2 cols might be tight.
+       Let's use auto-fill but with smaller minmax for mobile */
+    .p-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        /* Allow smaller cards */
+    }
+
+    .p-card {
+        padding: 15px;
+        /* Reduced card padding */
+    }
+
+    .p-img-box {
+        height: 140px;
+        /* Smaller images */
+        margin-bottom: 10px;
+    }
+
+    .p-content h3 {
+        font-size: 0.9rem;
+        /* Smaller title */
+        font-weight: 600;
+    }
+
+    .price-neon {
+        font-size: 1.2rem;
+        /* Smaller price */
+    }
+
+    .btn-purchase.open-product-detail {
+        padding: 8px 0;
+        font-size: 0.75rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Footer / Asesor Button Compact */
     .footer-asesor-btn {
+        position: fixed;
+        /* Stick to bottom right on mobile often better, or keep relative */
+        margin: 20px auto;
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        /* Using relative as per previous request, but smaller */
         position: relative;
         right: auto;
         top: auto;
         transform: none;
-        margin: 20px auto;
         width: fit-content;
         display: inline-flex;
     }
 
-    .footer-asesor-btn:hover {
-        transform: scale(1.05);
+    /* Section Headers */
+    .section-header h2 {
+        font-size: 1.8rem !important;
+        /* Force smaller header */
     }
 }
