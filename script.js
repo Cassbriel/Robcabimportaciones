@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dropdown Selectors
     const dropdownBtn = document.getElementById('cat-dropdown-toggle');
     const dropdownList = document.getElementById('cat-dropdown-list');
-    const catBtns = document.querySelectorAll('.cat-btn-drop');
+    const catBtns = document.querySelectorAll('.cat-btn-drop, .menu-categorias a');
 
     // ---------------------------------------------------------
     // 2. DROPDOWN INTERACTION
@@ -58,10 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
             titleEl.textContent = (cat === 'all' || cat === 'todo' || cat === 'ver todo') ? 'Todos los Productos' : cat;
         }
 
-        allProducts.forEach(p => {
-            const productCat = p.getAttribute('data-cat');
+        // Re-select products as they might have been dynamically rendered
+        const currentProducts = document.querySelectorAll('.p-card');
+        currentProducts.forEach(p => {
+            const productCat = (p.getAttribute('data-cat') || "").toLowerCase();
+            const normalizedCat = (cat || "").toLowerCase();
+
             // Check for match
-            if (cat === 'all' || cat === 'todo' || cat === 'ver todo' || productCat === cat) {
+            if (normalizedCat === 'all' || normalizedCat === 'todo' || normalizedCat === 'ver todo' || productCat === normalizedCat) {
                 p.style.display = 'block';
                 setTimeout(() => p.style.opacity = '1', 10);
             } else {
@@ -205,37 +209,193 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // ---------------------------------------------------------
-    // 5. UTILS & MODALS
+    // ---------------------------------------------------------
+    // 5. NUEVO ASESOR FIJO + SISTEMA ADMIN (ROBCAB FINAL SYNC)
     // ---------------------------------------------------------
 
-    // Handing Asesor / Contact Modal
-    const asesorBtn = document.getElementById('asesor-btn');
-    const contactModal = document.getElementById('contact-modal');
-    const closeContactModal = document.getElementById('close-contact-modal');
+    // CONFIGURACIÓN SUPABASE
+    const SUPABASE_URL = 'https://ernfxavvwhduvkutjdau.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_ZxOiNqLYGpUlcyVqUsVFqQ_27NTzG5C';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    if (asesorBtn && contactModal) {
-        asesorBtn.addEventListener('click', () => {
-            contactModal.style.display = 'flex';
-            setTimeout(() => contactModal.classList.add('active'), 10);
-        });
+    // BASE DE DATOS LOCAL (Cache/Fallback)
+    // Estructura nueva: { hero: {title, sub, img}, asesores: [{nom, num}...], cats: "...", users: [...] }
+    let db = JSON.parse(localStorage.getItem('robcab_final')) || {
+        hero: { title: "Robcab Importaciones", sub: "Garantía Maestra", img: "" },
+        asesores: [
+            { nom: "Asesor Ventas 1", num: "51900000001" },
+            { nom: "Asesor Ventas 2", num: "51900000002" },
+            { nom: "Reclamos", num: "51900000006" }
+        ],
+        cats: "Tecnología y Audio: Tablets, Cámaras, Drones, Proyectores, Videojuegos, TV Box, Auriculares, Parlantes, Micrófonos, Cargadores, Tecnología General | Hogar y Cocina: Ventiladores, Licuadoras, Ollas, Freidoras, Cocina, Hogar, Organizadores, Luminaria & Sandalias | Motores y Herramientas: Carros, Motos, Herramientas, Hidrolavadoras | Oficina y Muebles: Sillas, Oficina | Moda y Accesorios: Relojes, Mochilas, Carteras, Morrales, Gorras, Pijamas, Perfumes | Salud y Belleza: Salud, Masajeadores, Belleza, Fitness | Niños y Varios: Peluches, Juguetes, Didácticos & Hidrogel, Mascotas, Regalos, Tomatodos & Kawai",
+        users: [{ u: "admin", p: "1234", r: "Admin" }]
+    };
+
+    // MOSTRAR/OCULTAR LISTA DE WHATSAPP
+    window.toggleLista = function () {
+        const panel = document.getElementById('panel-numeros');
+        if (panel) panel.classList.toggle('hidden-robcab');
+    };
+
+    // RENDERIZAR PRODUCTOS DINÁMICOS EN LA WEB
+    function renderProductosWeb() {
+        const grid = document.querySelector('.p-grid');
+        if (!grid || !db.products || db.products.length === 0) return;
+
+        grid.innerHTML = db.products.map(p => `
+            <div class="p-card" data-cat="${p.cat.toLowerCase()}" data-description="${p.desc}">
+                <div class="p-content">
+                    <div class="p-img-box">
+                        <img src="${p.img}" alt="${p.name}">
+                    </div>
+                    <h3>${p.name}</h3>
+                    <p class="price-neon">S/ ${parseFloat(p.price).toFixed(2)}</p>
+                    <button class="btn-purchase open-product-detail">Ver Detalles</button>
+                    ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+                </div>
+            </div>
+        `).join('');
     }
 
-    if (closeContactModal && contactModal) {
-        closeContactModal.addEventListener('click', () => {
-            contactModal.classList.remove('active');
-            setTimeout(() => contactModal.style.display = 'none', 300);
-        });
-    }
+    // RENDERIZAR NÚMEROS Y ELEMENTOS UI EN LA WEB
+    function renderWeb() {
+        const lista = document.getElementById('lista-asesores');
+        const reclamosDiv = document.getElementById('contacto-reclamos');
 
-    // Close modal on outside click
-    window.addEventListener('click', (e) => {
-        if (contactModal && e.target === contactModal) {
-            contactModal.classList.remove('active');
-            setTimeout(() => contactModal.style.display = 'none', 300);
+        // Separar asesores de ventas vs reclamos basado en nombre
+        const asesores = Array.isArray(db.asesores) ? db.asesores : [];
+        let ventas = asesores.filter(a => !a.nom.toLowerCase().includes('reclamo'));
+        let reclamosList = asesores.filter(a => a.nom.toLowerCase().includes('reclamo'));
+        let reclamoItem = reclamosList.length > 0 ? reclamosList[0] : { num: "51900000006" };
+
+        if (lista) {
+            lista.innerHTML = ventas.map((a, i) =>
+                `<a class="contacto-link" href="https://wa.me/${a.num}" target="_blank">🟢 ${a.nom}</a>`
+            ).join('');
         }
-    });
 
+        if (reclamosDiv) {
+            reclamosDiv.innerHTML =
+                `<a class="contacto-link" style="background:#ff4757; color:white; border:none;" href="https://wa.me/${reclamoItem.num}" target="_blank">⚠️ Reclamos y Consultas</a>`;
+        }
+
+        // Actualizar Elementos UI (Hero)
+        const heroTitle = document.querySelector('.hero-box h2');
+        const heroSub = document.querySelector('.hero-box p:not(.hero-subtitle)');
+        const heroSection = document.getElementById('inicio');
+
+        if (heroTitle && db.hero && db.hero.title) heroTitle.textContent = db.hero.title;
+        if (heroSub && db.hero && db.hero.sub) heroSub.textContent = db.hero.sub;
+        if (heroSection && db.hero && db.hero.img && db.hero.img.length > 5) {
+            heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${db.hero.img}')`;
+            heroSection.style.backgroundSize = 'cover';
+            heroSection.style.backgroundPosition = 'center';
+            heroSection.style.backgroundRepeat = 'no-repeat';
+        }
+
+        // Actualizar Categorías (Menú Dropdown con Subcategorías)
+        const catMenus = document.querySelectorAll('.menu-categorias');
+        if (catMenus.length > 0 && db.cats) {
+            let catHtml = "";
+
+            // Verificamos si las categorías vienen en formato de grupos (con '|')
+            if (db.cats.includes('|') || db.cats.includes(':')) {
+                const groups = db.cats.split('|').map(g => g.trim());
+                groups.forEach(groupStr => {
+                    const parts = groupStr.split(':');
+                    const groupTitle = parts[0]?.trim() || "Otros";
+                    const subs = parts[1] ? parts[1].split(',').map(s => s.trim()) : [];
+
+                    catHtml += `
+                        <details class="grupo" style="margin-bottom: 5px;">
+                            <summary style="padding: 10px; cursor: pointer; color: var(--primary); font-weight: 700; list-style: none;">${groupTitle}</summary>
+                            <ul style="padding-left: 20px;">
+                                ${subs.map(s => `<li><a href="#" data-cat="${s.toLowerCase()}" style="color: #aaa; text-decoration: none; padding: 5px 0; display: block;">${s}</a></li>`).join('')}
+                            </ul>
+                        </details>
+                    `;
+                });
+                catHtml += `<div style="padding:15px; border-top:1px solid #222;"><a href="#" data-cat="all" style="color: var(--primary); font-weight: bold; text-decoration:none;">VER TODO</a></div>`;
+            } else {
+                // Formato plano (solo comas)
+                const categories = db.cats.split(',').map(c => c.trim()).filter(c => c !== "");
+                catHtml = '<ul>' +
+                    categories.map(cat => `<li><a href="#" data-cat="${cat.toLowerCase()}">${cat}</a></li>`).join('') +
+                    '<li><a href="#" data-cat="all" style="color: var(--primary); font-weight: bold;">VER TODO</a></li>' +
+                    '</ul>';
+            }
+
+            catMenus.forEach(menu => {
+                menu.innerHTML = catHtml;
+            });
+
+            // Re-bind click events para todos los enlaces generados
+            const newLinks = document.querySelectorAll('.menu-categorias a');
+            newLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const cat = link.getAttribute('data-cat');
+                    const isCategoryPage = window.location.pathname.includes('category.html');
+
+                    if (isCategoryPage) {
+                        applyFilter(cat);
+                        document.querySelectorAll('.menu-categorias a').forEach(a => a.classList.remove('active'));
+                        link.classList.add('active');
+                        const dropdownList = document.getElementById('cat-dropdown-list');
+                        if (dropdownList) dropdownList.classList.remove('active');
+                    } else {
+                        window.location.href = `category.html?cat=${cat}`;
+                    }
+                });
+            });
+        }
+
+        // Renderizar productos dinámicos
+        renderProductosWeb();
+    }
+
+    // Admin legacy cleanup
+    window.toggleAdmin = function () { };
+
+    // Carga inicial (Sincronizada con Nube)
+    async function syncAndRender() {
+        try {
+            // 1. Cargar Configuración
+            const { data: config } = await supabaseClient.from('site_config').select('data').eq('id', 'robcab_settings').single();
+            if (config) {
+                db.hero = config.data.hero;
+                db.cats = config.data.cats;
+            }
+
+            // 2. Cargar Productos
+            const { data: prods } = await supabaseClient.from('products').select('*');
+            if (prods) {
+                db.products = prods.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    cat: p.cat,
+                    price: p.price,
+                    badge: p.badge,
+                    desc: p.description,
+                    img: p.img
+                }));
+            }
+
+            // Actualizar LocalStorage para offline
+            localStorage.setItem('robcab_final', JSON.stringify(db));
+        } catch (e) {
+            console.log("Modo Offline: Usando datos locales");
+        }
+        renderWeb();
+    }
+
+    syncAndRender();
+
+    // ---------------------------------------------------------
+    // Toast Notification Helper
+    // ---------------------------------------------------------
     function showToast(title, message, type = 'info') {
         let container = document.getElementById('toast-container');
         if (!container) {

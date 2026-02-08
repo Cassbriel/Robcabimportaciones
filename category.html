@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -31,70 +33,32 @@
 
     <!-- Navigation -->
     <nav class="navbar">
-        <a href="#" class="logo-link">
-            <h1>ROBCAB</h1>
-        </a>
-
-        <!-- Category Dropdown Menu (Integrated) -->
-        <div class="category-dropdown-container">
-            <button class="dropdown-btn" id="cat-dropdown-toggle">
-                CATEGORÍAS <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-content" id="cat-dropdown-list">
-                <button class="cat-btn-drop" data-cat="all">VER TODO</button>
-                <button class="cat-btn-drop">Tablets</button>
-                <button class="cat-btn-drop">Ventiladores</button>
-                <button class="cat-btn-drop">Cámaras</button>
-                <button class="cat-btn-drop">Relojes</button>
-                <button class="cat-btn-drop">Auriculares</button>
-                <button class="cat-btn-drop">Drones</button>
-                <button class="cat-btn-drop">Proyectores</button>
-                <button class="cat-btn-drop">Videojuegos</button>
-                <button class="cat-btn-drop">TV Box</button>
-                <button class="cat-btn-drop">Parlantes</button>
-                <button class="cat-btn-drop">Micrófonos</button>
-                <button class="cat-btn-drop">Cargadores</button>
-                <button class="cat-btn-drop">Carros</button>
-                <button class="cat-btn-drop">Motos</button>
-                <button class="cat-btn-drop">Tecnología</button>
-                <button class="cat-btn-drop">Sillas</button>
-                <button class="cat-btn-drop">Oficina</button>
-                <button class="cat-btn-drop">Luminaria & Sandalias</button>
-                <button class="cat-btn-drop">Herramientas</button>
-                <button class="cat-btn-drop">Hidrolavadoras</button>
-                <button class="cat-btn-drop">Mascotas</button>
-                <button class="cat-btn-drop">Licuadoras</button>
-                <button class="cat-btn-drop">Ollas</button>
-                <button class="cat-btn-drop">Freidoras</button>
-                <button class="cat-btn-drop">Organizadores</button>
-                <button class="cat-btn-drop">Cocina</button>
-                <button class="cat-btn-drop">Hogar</button>
-                <button class="cat-btn-drop">Fitness</button>
-                <button class="cat-btn-drop">Peluches</button>
-                <button class="cat-btn-drop">Juguetes</button>
-                <button class="cat-btn-drop">Didácticos & Hidrogel</button>
-                <button class="cat-btn-drop">Mochilas</button>
-                <button class="cat-btn-drop">Carteras</button>
-                <button class="cat-btn-drop">Morrales</button>
-                <button class="cat-btn-drop">Salud</button>
-                <button class="cat-btn-drop">Masajeadores</button>
-                <button class="cat-btn-drop">Belleza</button>
-                <button class="cat-btn-drop">Perfumes</button>
-                <button class="cat-btn-drop">Regalos</button>
-                <button class="cat-btn-drop">Pijamas</button>
-                <button class="cat-btn-drop">Gorras</button>
-                <button class="cat-btn-drop">Tomatodos & Kawai</button>
-                <button class="cat-btn-drop">Nuevos Ingresos & Packs Promocionales</button>
+        <div class="container">
+            <!-- 1. Logo -->
+            <div style="display: flex; justify-content: flex-start;">
+                <a href="index.html" class="logo-link">
+                    <div class="logo-text-wrapper">
+                        ROBCAB <span>Importaciones</span>
+                    </div>
+                </a>
             </div>
-        </div>
 
-        <div class="search-container">
-            <input type="text" id="main-search-input" placeholder="¿Qué estás buscando hoy para tu hogar?">
-            <div id="search-results-dropdown" class="search-results-dropdown"></div>
-        </div>
+            <!-- 2. Categories -->
+            <div class="category-dropdown-container" style="margin: 0; justify-content: flex-start;">
+                <button class="dropdown-btn" id="cat-dropdown-toggle">
+                    CATEGORÍAS <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content new-menu-wrapper" id="cat-dropdown-list">
+                    <nav class="menu-categorias"></nav>
+                </div>
+            </div>
 
-        <div class="nav-actions">
-            <!-- Cart Removed -->
+            <!-- 3. Search (Longer) -->
+            <div class="search-container" style="margin: 0; max-width: none;">
+                <input type="text" id="main-search-input" placeholder="¿Qué estás buscando hoy para tu hogar?">
+                <div id="search-results-dropdown" class="search-results-dropdown"></div>
+            </div>
+
         </div>
     </nav>
 
@@ -171,8 +135,9 @@
         <div class="container footer-content"
             style="padding: 60px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; border-top: 1px solid var(--luxury-brown);">
             <div class="footer-brand">
-                <h2 style="font-family: 'Syncopate', sans-serif; letter-spacing: 3px; color: var(--neon-gold);">ROBCAB
-                </h2>
+                <div class="logo-text-wrapper" style="font-size: 1.4rem; margin-bottom: 10px;">
+                    ROBCAB <span>Importaciones</span>
+                </div>
                 <p style="opacity: 0.6; margin-top: 15px;">Tu socio confiable en seguridad electrónica y gadgets para el
                     hogar.</p>
             </div>
@@ -202,12 +167,24 @@
                 </div>
             </div>
         </div>
-        <div class="footer-bottom"
-            style="text-align: center; padding: 20px; background: #000; border-top: 1px solid #111; font-size: 0.8rem; color: #555; position: relative;">
-            <p>&copy; 2026 ROBCAB Importaciones. Todos los derechos reservados.</p>
-            <div id="asesor-btn" class="footer-asesor-btn">
-                <i class="fa-solid fa-headset"></i>
-                <span>Asesor</span>
+        <div class="footer-bottom">
+            <div class="container"
+                style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0;">
+                <p>&copy; 2026 ROBCAB Importaciones. Todos los derechos reservados.</p>
+                <!-- ASESOR REINSTATED WITH SYSTEM WRAPPER IN FOOTER -->
+            </div>
+            <div id="robcab-web-system">
+                <div id="wrapper-asesor-fijo">
+                    <div id="btn-whatsapp-main" onclick="toggleLista()">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                        <span>Asesor</span>
+                    </div>
+                    <div id="panel-numeros" class="hidden-robcab text-dark">
+                        <div class="panel-header">Nuestros Asesores</div>
+                        <div id="lista-asesores"></div>
+                        <div id="contacto-reclamos"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>

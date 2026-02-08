@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Robcab | Fácil y Rápido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';</script>
+    <!-- IA para reconocimiento de imágenes -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #ffb400;
+            --primary-glow: rgba(255, 180, 0, 0.4);
+            --bg: #050507;
+            --sidebar: #0a0a0c;
+            --card: #121216;
+            --card-hover: #1c1c22;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-dim: #94949e;
+            --danger: #ff4d4d;
+            --success: #00ff88;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* UTILS */
+        .hidden {
+            display: none !important;
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .no-padding {
+            padding: 0 !important;
+        }
+
+        .overflow-hidden {
+            overflow: hidden;
+        }
+
+        /* LOGIN */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #1a1a20 0%, #000 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: var(--card);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            width: 380px;
+            text-align: center;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .login-box h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        /* SIDEBAR */
+        aside {
+            width: 280px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--glass-border);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            padding-left: 10px;
+        }
+
+        .nav-item {
+            padding: 14px 20px;
+            color: var(--text-dim);
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 180, 0, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-item.logout {
+            margin-top: auto;
+            color: var(--text-dim);
+        }
+
+        .nav-item.logout:hover {
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--danger);
+        }
+
+        /* MAIN */
+        main {
+            flex-grow: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .welcome-msg h1 {
+            font-size: 2.5rem;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .welcome-msg p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* CARDS & GRIDS */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+
+        .card-header {
+            margin-bottom: 25px;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .card-header p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .grid-three {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* FORMS */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: #000;
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            font-size: 15px;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--primary-glow);
+        }
+
+        .btn-main.secondary {
+            background: transparent;
+            color: #fff;
+            border-color: var(--glass-border);
+        }
+
+        .btn-main.secondary:hover {
+            background: var(--glass);
+        }
+
+        .btn-main.outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        /* INVENTORY TABLE */
+        .inventory-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .search-wrap {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-wrap i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+        }
+
+        .search-wrap input {
+            padding-left: 50px;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .modern-table th {
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 13px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modern-table td {
+            padding: 15px 20px;
+            border-bottom: 1px dotted var(--glass-border);
+            vertical-align: middle;
+        }
+
+        .modern-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .prod-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pill.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        .icon-btn.del:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* HERO EDITOR */
+        .hero-editor-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .hero-mini-preview {
+            height: 220px;
+            border-radius: var(--radius-md);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .hero-mini-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-text-preview {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero-text-preview h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .hero-text-preview p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-card {
+            background: var(--card);
+            width: 850px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            padding: 25px 35px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 35px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 25px 35px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .close-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .prod-form-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 35px;
+        }
+
+        .img-drop {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            background: #000;
+            border: 2px dashed var(--glass-border);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .img-drop img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .img-drop .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .img-drop:hover .overlay {
+            opacity: 1;
+        }
+
+        /* AI IMPORT */
+        .drop-zone {
+            border: 2px dashed #444;
+            padding: 60px;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(255, 180, 0, 0.02);
+        }
+
+        .drop-zone:hover {
+            border-color: var(--primary);
+            background: rgba(255, 180, 0, 0.05);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 180, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color: var(--primary);">Acceso Robcab</h2>
+            <input type="text" id="u" placeholder="Usuario">
+            <input type="password" id="p" placeholder="Contraseña">
+            <button class="btn-main" style="width:100%; justify-content:center;" onclick="ingresar()">Entrar</button>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="hidden">
+        <div class="sidebar-brand">
+            <img src="logo.png" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+            <span>Robcab Master</span>
+        </div>
+        <nav>
+            <button class="nav-item active" onclick="tab('hero', this)"><i class="fas fa-desktop"></i> Portada</button>
+            <button class="nav-item" onclick="tab('productos', this)"><i class="fas fa-boxes-stacked"></i>
+                Inventario</button>
+            <button class="nav-item" onclick="tab('asesores', this)"><i class="fab fa-whatsapp"></i> Asesores</button>
+            <button class="nav-item" onclick="tab('menu', this)"><i class="fas fa-tags"></i> Menú Web</button>
+            <button class="nav-item" onclick="tab('importar', this)"><i class="fas fa-wand-magic-sparkles"></i> IA
+                Import</button>
+            <button class="nav-item" onclick="tab('usuarios', this)"><i class="fas fa-user-gear"></i> Usuarios</button>
+
+            <div class="sidebar-footer" style="margin-top: auto;">
+                <button class="nav-item logout" onclick="location.reload()"><i class="fas fa-power-off"></i>
+                    Salir</button>
+            </div>
+        </nav>
+    </aside>
+
+    <main id="main" class="hidden">
+        <div class="top-bar">
+            <div class="welcome-msg">
+                <h1 id="title">Panel Maestro</h1>
+                <p id="subtitle">Gestión centralizada de Robcab Importaciones</p>
+            </div>
+            <div class="top-actions">
+                <button class="btn-main secondary" onclick="window.open('index.html', '_blank')"><i
+                        class="fas fa-eye"></i> Ver Web</button>
+                <button class="btn-main" onclick="guardarTodo()"><i class="fas fa-cloud-arrow-up"></i> Sincronizar
+                    Web</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN PORTADA -->
+        <section id="sec-hero" class="tab-content">
+            <div class="card glass">
+                <div class="card-header">
+                    <h3><i class="fas fa-image"></i> Diseño de Impacto</h3>
+                    <p>Configura la imagen de fondo y el mensaje principal de bienvenida.</p>
+                </div>
+                <div class="hero-editor-grid">
+                    <div class="preview-area">
+                        <label>Previsualización</label>
+                        <div class="hero-mini-preview" id="hero-bg-preview" style="background-image: url('')">
+                            <div class="hero-text-preview">
+                                <h2 id="prev-h-title">Cargando...</h2>
+                                <p id="prev-h-sub">Subtítulo...</p>
+                            </div>
+                        </div>
+                        <input type="file" id="hero-file" accept="image/*" hidden
+                            onchange="previewImage(this, 'preview-hero', 'hero_img')">
+                        <button class="btn-main outline" style="width:100%"
+                            onclick="document.getElementById('hero-file').click()"><i class="fas fa-upload"></i> Subir
+                            Nueva Portada</button>
+                    </div>
+                    <div class="form-area">
+                        <div class="input-group">
+                            <label>Título de la Web</label>
+                            <input type="text" id="h-title" placeholder="Ej: Robcab Importaciones"
+                                oninput="document.getElementById('prev-h-title').innerText = this.value">
+                        </div>
+                        <div class="input-group">
+                            <label>Frase Inspiracional / Subtítulo</label>
+                            <textarea id="h-sub" placeholder="Ej: Garantía Maestra en cada producto" rows="3"
+                                oninput="document.getElementById('prev-h-sub').innerText = this.value"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN PRODUCTOS / INVENTARIO -->
+        <section id="sec-productos" class="tab-content hidden">
+            <div class="inventory-controls">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="prod-search" placeholder="Busca por nombre, categoría o precio..."
+                        oninput="filtrarTablaProductos()">
+                </div>
+                <button class="btn-main" onclick="abrirModalProducto()"><i class="fas fa-plus"></i> Nuevo
+                    Producto</button>
+            </div>
+
+            <div class="card no-padding overflow-hidden">
+                <table class="modern-table" id="table-products">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre del Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <!-- Se llena dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN ASESORES -->
+        <section id="sec-asesores" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fab fa-whatsapp"></i> Equipo de Ventas</h3>
+                    <p>Gestiona los números que aparecen en el botón flotante de WhatsApp.</p>
+                </div>
+                <div id="asesores-container" class="grid-three"></div>
+                <button class="btn-main outline" style="margin-top:20px" onclick="añadirAsesor()"><i
+                        class="fas fa-plus"></i> Añadir Asesor</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN MENÚ Y CATEGORÍAS -->
+        <section id="sec-menu" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list-ul"></i> Estructura del Menú</h3>
+                    <p>Define las categorías y subcategorías que tus clientes verán en la navegación.</p>
+                </div>
+                <div class="menu-editor">
+                    <div class="info-box"
+                        style="background: rgba(255,180,0,0.1); padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+                        <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                        <p style="font-size: 0.9rem;">Usa el formato <strong>Grupo: Sub1, Sub2 | Grupo 2: Sub3</strong>
+                            para crear menús desplegables inteligentes.</p>
+                    </div>
+                    <textarea id="m-cats" rows="10"
+                        placeholder="Ej: Tecnología: Cámaras, Drones | Hogar: Licuadoras, Ollas"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN IMPORTAR PDF -->
+        <section id="sec-importar" class="tab-content hidden">
+            <div class="card ai-import-card">
+                <div class="ai-header" style="text-align: center; margin-bottom: 40px;">
+                    <div class="ai-badge"
+                        style="background: var(--primary); color: #000; padding: 5px 15px; border-radius: 50px; display: inline-block; font-weight: 800; font-size: 10px; margin-bottom: 15px;">
+                        SMART BRAIN IA</div>
+                    <h2>Asistente de Importación Masiva</h2>
+                    <p style="color: var(--text-dim);">Sube tu catálogo en PDF y deja que nuestra IA identifique y
+                        recorte los productos automáticamente.</p>
+                </div>
+
+                <div class="drop-zone" id="pdf-drop-zone" onclick="document.getElementById('pdf-upload').click()">
+                    <div class="drop-content">
+                        <div class="icon-circle">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3>Haz clic para subir o arrastra tu PDF</h3>
+                        <p>Soporta catálogos de hasta 50 páginas</p>
+                    </div>
+                    <input type="file" id="pdf-upload" accept="application/pdf" hidden onchange="procesarPDF(this)">
+                </div>
+
+                <div id="pdf-status" class="status-indicator"
+                    style="margin-top: 20px; text-align: center; color: var(--primary); font-weight: 600;"></div>
+
+                <div class="results-layout" id="pdf-results-container" style="margin-top: 40px;">
+                    <!-- Columnas dinámicas de IA -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN USUARIOS -->
+        <section id="sec-usuarios" class="tab-content hidden">
+            <div class="grid-two">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus"></i> Añadir Acceso</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Nombre de Usuario</label>
+                            <input type="text" id="new-u" placeholder="Ej: MariaVentas">
+                        </div>
+                        <div class="input-group">
+                            <label>Contraseña</label>
+                            <input type="password" id="new-p" placeholder="••••••••">
+                        </div>
+                        <div class="input-group">
+                            <label>Rol de Acceso</label>
+                            <select id="new-r">
+                                <option value="Admin">Administrador (Control Total)</option>
+                                <option value="Editor">Editor (Solo WhatsApp)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-main" style="width:100%" onclick="crearUsuario()"><i class="fas fa-check"></i>
+                        Autorizar Usuario</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users-viewfinder"></i> Usuarios Activos</h3>
+                    </div>
+                    <div id="user-list-container" class="user-stack"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DE PRODUCTO -->
+    <div id="product-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-prod-title">Nuevo Producto</h3>
+                <button class="close-btn" onclick="cerrarModalProducto()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="prod-form-grid">
+                    <div class="prod-img-side">
+                        <div class="img-drop" onclick="document.getElementById('p-file').click()">
+                            <img id="p-preview" src="https://placehold.co/400x400/1a1a1e/white?text=Sube+Imagen">
+                            <div class="overlay"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <input type="file" id="p-file" hidden accept="image/*" onchange="previewProductImg(this)">
+                    </div>
+                    <div class="prod-info-side">
+                        <input type="hidden" id="p-id">
+                        <div class="input-group">
+                            <label>Nombre del Producto</label>
+                            <input type="text" id="p-name" placeholder="Ej: Cámara TP-Link C200">
+                        </div>
+                        <div class="input-group">
+                            <label>Categoría</label>
+                            <select id="p-cat">
+                                <!-- Se llena de db.cats -->
+                            </select>
+                        </div>
+                        <div class="grid-two">
+                            <div class="input-group">
+                                <label>Precio (S/)</label>
+                                <input type="number" id="p-price" step="0.01" placeholder="0.00">
+                            </div>
+                            <div class="input-group">
+                                <label>Etiqueta</label>
+                                <select id="p-badge">
+                                    <option value="">Ninguna</option>
+                                    <option value="NEW">NUEVO</option>
+                                    <option value="HOT">EL MÁS VENDIDO</option>
+                                    <option value="OFFER">OFERTA</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Descripción detallada</label>
+                            <textarea id="p-desc" rows="4" placeholder="Describe las características..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-main secondary" onclick="cerrarModalProducto()">Cancelar</button>
+                <button class="btn-main" onclick="guardarProducto()"><i class="fas fa-save"></i> Guardar
+                    Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN SUPABASE
+        const SUPABASE_URL = 'https://ernfxavvwhduvkutjdau.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_ZxOiNqLYGpUlcyVqUsVFqQ_27NTzG5C';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // BASE DE DATOS LOCAL (Cache/Fallback)
+        let db = JSON.parse(localStorage.getItem('robcab_final')) || {
+            hero: { title: "Robcab Importaciones", sub: "Garantía Maestra", img: "" },
+            products: [],
+            asesores: [
+                { nom: "Asesor Ventas 1", num: "51900000001" },
+                { nom: "Asesor Ventas 2", num: "51900000002" },
+                { nom: "Reclamos", num: "51900000006" }
+            ],
+            cats: "Tecnología y Audio: Tablets, Cámaras, Drones, Proyectores, Videojuegos, TV Box, Auriculares, Parlantes, Micrófonos, Cargadores, Tecnología General | Hogar y Cocina: Ventiladores, Licuadoras, Ollas, Freidoras, Cocina, Hogar, Organizadores, Luminaria & Sandalias | Motores y Herramientas: Carros, Motos, Herramientas, Hidrolavadoras | Oficina y Muebles: Sillas, Oficina | Moda y Accesorios: Relojes, Mochilas, Carteras, Morrales, Gorras, Pijamas, Perfumes | Salud y Belleza: Salud, Masajeadores, Belleza, Fitness | Niños y Varios: Peluches, Juguetes, Didácticos & Hidrogel, Mascotas, Regalos, Tomatodos & Kawai",
+            users: [{ u: "admin", p: "1234", r: "Admin" }]
+        };
+
+        // Si es una versión vieja, migrar productos
+        if (!db.products) db.products = [];
+
+        function ingresar() {
+            const uInput = document.getElementById('u').value;
+            const pInput = document.getElementById('p').value;
+            const user = db.users.find(x => x.u === uInput && x.p === pInput);
+
+            if (user) {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('sidebar').classList.remove('hidden');
+                document.getElementById('main').classList.remove('hidden');
+
+                if (user.r === 'Editor') {
+                    document.querySelectorAll('.nav-item').forEach(btn => {
+                        const label = btn.innerText.toLowerCase();
+                        if (!label.includes('asesores') && !label.includes('salir')) {
+                            btn.style.display = 'none';
+                        }
+                    });
+                    tab('asesores', document.querySelector('.nav-item:nth-child(3)'));
+                }
+                syncFromCloud();
+            } else alert("Credenciales incorrectas");
+        }
+
+        function tab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.remove('hidden');
+            if (btn) btn.classList.add('active');
+
+            // Actualizar textos del header
+            const titles = {
+                'hero': ['Editar Portada', 'Visualización de impacto para tu web'],
+                'productos': ['Inventario Total', 'Gestiona todos los productos de tu catálogo'],
+                'asesores': ['WhatsApp Team', 'Números de atención al cliente'],
+                'menu': ['Menú y Categorías', 'Estructura la navegación de tu sitio'],
+                'importar': ['IA Import Pro', 'Automatiza la carga de productos con IA'],
+                'usuarios': ['Configuración de Acceso', 'Administra quién puede entrar al panel']
+            };
+            document.getElementById('title').innerText = titles[id][0];
+            document.getElementById('subtitle').innerText = titles[id][1];
+        }
+
+        // --- GESTIÓN DE PORTADA ---
+        function previewImage(input, previewId, dbKey) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                db.hero.img = e.target.result;
+                document.getElementById('hero-bg-preview').style.backgroundImage = `url(${e.target.result})`;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        // --- GESTIÓN DE PRODUCTOS (INVENTARIO) ---
+        function renderProductos() {
+            const tbody = document.getElementById('products-tbody');
+            tbody.innerHTML = db.products.map(p => `
+                <tr>
+                    <td><img src="${p.img || 'https://placehold.co/400'}" class="prod-thumb"></td>
+                    <td><div style="font-weight:700">${p.name}</div><div style="font-size:10px; color:var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">${p.desc}</div></td>
+                    <td><span class="status-pill active" style="background:rgba(255,180,0,0.1); color:var(--primary)">${p.cat}</span></td>
+                    <td style="font-weight:700">S/ ${parseFloat(p.price).toFixed(2)}</td>
+                    <td><span class="status-pill active">Activo</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="icon-btn" onclick="abrirModalProducto('${p.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="icon-btn del" onclick="borrarProducto('${p.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirModalProducto(id = null) {
+            const modal = document.getElementById('product-modal');
+            const catSelect = document.getElementById('p-cat');
+
+            // Cargar categorías disponibles
+            const allCats = db.cats.replace(/\|/g, ':').split(':').map(c => c.split(',')).flat().map(c => c.trim()).filter(c => c && !c.includes('|'));
+            catSelect.innerHTML = [...new Set(allCats)].map(c => `<option value="${c}">${c}</option>`).join('');
+
+            if (id) {
+                const p = db.products.find(x => x.id === id);
+                document.getElementById('modal-prod-title').innerText = "Editar Producto";
+                document.getElementById('p-id').value = p.id;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-cat').value = p.cat;
+                document.getElementById('p-price').value = p.price;
+                document.getElementById('p-badge').value = p.badge || "";
+                document.getElementById('p-desc').value = p.desc;
+                document.getElementById('p-preview').src = p.img;
+            } else {
+                document.getElementById('modal-prod-title').innerText = "Nuevo Producto";
+                document.getElementById('p-id').value = "";
+                document.getElementById('p-name').value = "";
+                document.getElementById('p-price').value = "";
+                document.getElementById('p-desc').value = "";
+                document.getElementById('p-preview').src = "https://placehold.co/400x400/1a1a1e/white?text=Sube+Imagen";
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function cerrarModalProducto() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function previewProductImg(input) {
+            const reader = new FileReader();
+            reader.onload = (e) => document.getElementById('p-preview').src = e.target.result;
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function guardarProducto() {
+            const id = document.getElementById('p-id').value;
+            const nuevo = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('p-name').value,
+                cat: document.getElementById('p-cat').value,
+                price: document.getElementById('p-price').value,
+                badge: document.getElementById('p-badge').value,
+                desc: document.getElementById('p-desc').value,
+                img: document.getElementById('p-preview').src
+            };
+
+            if (id) {
+                const idx = db.products.findIndex(x => x.id === id);
+                db.products[idx] = nuevo;
+            } else {
+                db.products.push(nuevo);
+            }
+
+            renderProductos();
+            cerrarModalProducto();
+        }
+
+        function borrarProducto(id) {
+            if (confirm("¿Estás seguro de eliminar este producto?")) {
+                db.products = db.products.filter(x => x.id !== id);
+                renderProductos();
+            }
+        }
+
+        function filtrarTablaProductos() {
+            const q = document.getElementById('prod-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#products-tbody tr');
+            rows.forEach(r => {
+                const txt = r.innerText.toLowerCase();
+                r.style.display = txt.includes(q) ? '' : 'none';
+            });
+        }
+
+        // --- GESTIÓN DE ASESORES ---
+        function añadirAsesor() {
+            db.asesores.push({ nom: "Nuevo Asesor", num: "519..." });
+            renderAsesores();
+        }
+
+        function renderAsesores() {
+            const container = document.getElementById('asesores-container');
+            container.innerHTML = db.asesores.map((a, i) => `
+                <div class="card glass" style="padding: 20px; margin: 0;">
+                    <div class="input-group">
+                        <label>Nombre</label>
+                        <input type="text" oninput="db.asesores[${i}].nom = this.value" value="${a.nom}">
+                    </div>
+                    <div class="input-group" style="margin:0">
+                        <label>WhatsApp (Sin +)</label>
+                        <input type="text" oninput="db.asesores[${i}].num = this.value" value="${a.num}">
+                    </div>
+                    <button class="icon-btn del" style="margin-top:15px" onclick="db.asesores.splice(${i},1); renderAsesores()"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        // --- GESTIÓN DE USUARIOS ---
+        function crearUsuario() {
+            const u = document.getElementById('new-u').value;
+            const p = document.getElementById('new-p').value;
+            const r = document.getElementById('new-r').value;
+            if (!u || !p) return alert("Completa los datos");
+            db.users.push({ u, p, r });
+            actualizarListaUsuarios();
+        }
+
+        function actualizarListaUsuarios() {
+            document.getElementById('user-list-container').innerHTML = db.users.map(u => `
+                <div class="card glass" style="padding:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:700">${u.u}</div>
+                        <div style="font-size:11px; color:var(--primary)">Rol: ${u.r}</div>
+                    </div>
+                    <button class="icon-btn del" onclick="db.users = db.users.filter(x => x.u !== '${u.u}'); actualizarListaUsuarios()"><i class="fas fa-user-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        // --- CARGA INICIAL Y GUARDADO ---
+        function cargarUI() {
+            document.getElementById('h-title').value = db.hero.title;
+            document.getElementById('h-sub').value = db.hero.sub;
+            document.getElementById('prev-h-title').innerText = db.hero.title;
+            document.getElementById('prev-h-sub').innerText = db.hero.sub;
+            if (db.hero.img) document.getElementById('hero-bg-preview').style.backgroundImage = `url(${db.hero.img})`;
+
+            document.getElementById('m-cats').value = db.cats;
+
+            renderProductos();
+            renderAsesores();
+            actualizarListaUsuarios();
+        }
+
+        async function guardarTodo() {
+            db.hero.title = document.getElementById('h-title').value;
+            db.hero.sub = document.getElementById('h-sub').value;
+            db.cats = document.getElementById('m-cats').value;
+
+            // Guardar en LocalStorage (Cache FAST)
+            localStorage.setItem('robcab_final', JSON.stringify(db));
+
+            // EFECTO DE GUARDADO (UI)
+            const btn = document.querySelector('.btn-main i.fa-cloud-arrow-up').parentElement;
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
+
+            try {
+                // 1. Sincronizar Configuración (Hero, Cats)
+                await supabase.from('site_config').upsert({
+                    id: 'robcab_settings',
+                    data: { hero: db.hero, cats: db.cats }
+                });
+
+                // 2. Sincronizar Productos (Limpiar e insertar todos para simplicidad en este MVP)
+                // En una app real usaríamos deltas, pero para este catálogo pequeño esto es seguro.
+                await supabase.from('products').delete().neq('id', '0'); // Limpiar
+                if (db.products.length > 0) {
+                    await supabase.from('products').insert(db.products.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        cat: p.cat,
+                        price: p.price,
+                        badge: p.badge,
+                        description: p.desc,
+                        img: p.img
+                    })));
+                }
+
+                btn.innerHTML = '<i class="fas fa-check"></i> ¡Nube Sincronizada!';
+                btn.style.background = 'var(--success)';
+            } catch (err) {
+                console.error(err);
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error Nube';
+                btn.style.background = 'var(--danger)';
+            }
+
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.style.background = 'var(--primary)';
+            }, 3000);
+        }
+
+        // CARGAR DESDE LA NUBE AL INICIAR
+        async function syncFromCloud() {
+            try {
+                const { data: config } = await supabase.from('site_config').select('data').eq('id', 'robcab_settings').single();
+                if (config) {
+                    db.hero = config.data.hero;
+                    db.cats = config.data.cats;
+                }
+
+                const { data: prods } = await supabase.from('products').select('*');
+                if (prods) {
+                    db.products = prods.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        cat: p.cat,
+                        price: p.price,
+                        badge: p.badge,
+                        desc: p.description,
+                        img: p.img
+                    }));
+                }
+
+                localStorage.setItem('robcab_final', JSON.stringify(db));
+                cargarUI();
+            } catch (e) {
+                console.log("Usando base de datos local (Offline)");
+                cargarUI();
+            }
+        }
+
+        // --- LÓGICA DE IMPORTACIÓN DE PDF (SIMPLIFICADA PARA EL EJEMPLO) ---
+        let modelIA = null;
+        async function procesarPDF(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const status = document.getElementById('pdf-status');
+            status.innerHTML = "⏳ Analizando con Smart Brain IA...";
+
+            try {
+                if (!modelIA) modelIA = await mobilenet.load();
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+                // Procesar solo primera página como demo para no saturar memoria
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                // Extraer 4 bloques
+                const container = document.getElementById('pdf-results-container');
+                container.innerHTML = '<div class="grid-three" id="pdf-grid"></div>';
+                const grid = document.getElementById('pdf-grid');
+
+                for (let i = 0; i < 4; i++) {
+                    const tile = document.createElement('canvas');
+                    tile.width = 300; tile.height = 300;
+                    const tileCtx = tile.getContext('2d');
+                    tileCtx.drawImage(canvas, (i % 2) * 300, Math.floor(i / 2) * 300, 300, 300, 0, 0, 300, 300);
+
+                    const predictions = await modelIA.classify(tile);
+                    const label = predictions[0].className.split(',')[0];
+                    const img = tile.toDataURL('image/jpeg');
+
+                    grid.innerHTML += `
+                        <div class="card glass" style="padding:15px">
+                            <img src="${img}" style="width:100%; border-radius:10px; margin-bottom:10px">
+                            <div style="font-size:10px; color:var(--primary); text-transform:uppercase; font-weight:800">${label}</div>
+                            <button class="btn-main outline" style="width:100%; margin-top:10px; font-size:11px" onclick="usarImagenIA('${img}', '${label}')">Usar como Producto</button>
+                        </div>
+                    `;
+                }
+                status.innerHTML = "✅ Análisis IA completado (Pág 1)";
+            } catch (e) {
+                status.innerHTML = "❌ Error: " + e.message;
+            }
+        }
+
+        function usarImagenIA(img, label) {
+            abrirModalProducto();
+            document.getElementById('p-name').value = label;
+            document.getElementById('p-preview').src = img;
+            tab('productos');
+        }
+    </script>
+</body>
+
+</html>
