@@ -582,6 +582,8 @@
                 Inventario</button>
             <button class="nav-item" onclick="tab('asesores', this)"><i class="fab fa-whatsapp"></i> Asesores</button>
             <button class="nav-item" onclick="tab('menu', this)"><i class="fas fa-tags"></i> Menú Web</button>
+            <button class="nav-item" onclick="tab('categorias', this)"><i class="fas fa-layer-group"></i> Ordenar
+                Categorías</button>
             <button class="nav-item" onclick="tab('importar', this)"><i class="fas fa-wand-magic-sparkles"></i> IA
                 Import</button>
             <button class="nav-item" onclick="tab('usuarios', this)"><i class="fas fa-user-gear"></i> Usuarios</button>
@@ -689,7 +691,87 @@
             </div>
         </section>
 
-        <!-- SECCIÓN MENÚ Y CATEGORÍAS -->
+        <!-- SECCIÓN CATEGORÍAS (ORDENAMIENTO) -->
+        <section id="sec-categorias" class="tab-content hidden">
+            <div class="card glass">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3><i class="fas fa-layer-group"></i> Gestión y Orden</h3>
+                        <p>Arrastra las categorías para cambiar su orden en la web.</p>
+                    </div>
+                    <button class="btn-main" onclick="nuevaCategoria()"><i class="fas fa-plus"></i> Nueva
+                        Categoría</button>
+                </div>
+
+                <div id="categorias-drag-container" class="categorias-list"
+                    style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Se llena con renderCategoriasEditor() -->
+                </div>
+
+                <div
+                    style="margin-top: 30px; padding: 20px; background: rgba(255,180,0,0.05); border-radius: 12px; border: 1px dashed var(--primary);">
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">
+                        <strong>Tip Pro:</strong> El orden que definas aquí es el mismo que verán tus clientes en el
+                        menú desplegable y en la barra de filtros.
+                    </p>
+                </div>
+            </div>
+
+            <style>
+                .cat-item-editor {
+                    background: var(--card);
+                    border: 1px solid var(--glass-border);
+                    border-radius: var(--radius-md);
+                    padding: 15px 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    cursor: grab;
+                    transition: var(--transition);
+                }
+
+                .cat-item-editor:active {
+                    cursor: grabbing;
+                }
+
+                .cat-item-editor:hover {
+                    border-color: var(--primary);
+                    background: var(--card-hover);
+                }
+
+                .cat-item-editor.dragging {
+                    opacity: 0.5;
+                    background: var(--primary-glow);
+                }
+
+                .cat-handle {
+                    color: var(--text-dim);
+                    cursor: grab;
+                }
+
+                .cat-name-input {
+                    flex-grow: 1;
+                    background: transparent;
+                    border: none;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    color: #fff;
+                    padding: 5px;
+                }
+
+                .cat-name-input:focus {
+                    outline: none;
+                    border-bottom: 2px solid var(--primary);
+                }
+
+                .cat-actions {
+                    display: flex;
+                    gap: 8px;
+                }
+            </style>
+        </section>
+
+        <!-- SECCIÓN MENÚ Y CATEGORÍAS (LEGACY/TEXTO) -->
         <section id="sec-menu" class="tab-content hidden">
             <div class="card">
                 <div class="card-header">
@@ -894,7 +976,8 @@
                 'hero': ['Editar Portada', 'Visualización de impacto para tu web'],
                 'productos': ['Inventario Total', 'Gestiona todos los productos de tu catálogo'],
                 'asesores': ['WhatsApp Team', 'Números de atención al cliente'],
-                'menu': ['Menú y Categorías', 'Estructura la navegación de tu sitio'],
+                'menu': ['Configuración de Texto', 'Formato avanzado de categorías'],
+                'categorias': ['Ordenar Mi Tienda', 'Organiza el orden visual de tus categorías'],
                 'importar': ['IA Import Pro', 'Automatiza la carga de productos con IA'],
                 'usuarios': ['Configuración de Acceso', 'Administra quién puede entrar al panel']
             };
@@ -1033,7 +1116,90 @@
             `).join('');
         }
 
-        // --- GESTIÓN DE USUARIOS ---
+        // --- GESTIÓN DE CATEGORÍAS (MODERNO) ---
+        function renderCategoriasEditor() {
+            const container = document.getElementById('categorias-drag-container');
+            // Extraer nombres planos de las categorías actuales
+            const categoriasArr = db.cats.split('|').map(group => {
+                const parts = group.split(':');
+                return {
+                    full: group.trim(),
+                    name: parts[0].trim(),
+                    subs: parts[1] ? parts[1].trim() : ""
+                };
+            }).filter(c => c.name !== "");
+
+            container.innerHTML = categoriasArr.map((cat, idx) => `
+                <div class="cat-item-editor" draggable="true" data-index="${idx}" ondragstart="handleDragStart(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragend="handleDragEnd(event)">
+                    <div class="cat-handle"><i class="fas fa-grip-vertical"></i></div>
+                    <div style="display:flex; flex-direction:column; flex-grow:1;">
+                        <input class="cat-name-input" value="${cat.name}" onchange="updateCatName(${idx}, this.value)" placeholder="Nombre del Grupo">
+                        <input style="font-size:0.75rem; color:var(--text-dim); background:transparent; border:none; padding:5px;" value="${cat.subs}" onchange="updateCatSubs(${idx}, this.value)" placeholder="Subcategorías (separadas por coma)">
+                    </div>
+                    <div class="cat-actions">
+                        <button class="icon-btn del" onclick="eliminarCategoria(${idx})"><i class="fas fa-trash-can"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let dragSrcIndex = null;
+
+        function handleDragStart(e) {
+            dragSrcIndex = e.currentTarget.dataset.index;
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetIndex = e.currentTarget.dataset.index;
+            if (dragSrcIndex !== targetIndex) {
+                const cats = db.cats.split('|').map(c => c.trim());
+                const removed = cats.splice(dragSrcIndex, 1)[0];
+                cats.splice(targetIndex, 0, removed);
+                db.cats = cats.join(' | ');
+                renderCategoriasEditor();
+            }
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+        }
+
+        function nuevaCategoria() {
+            const nueva = "Nueva Categoría: Sub 1, Sub 2";
+            db.cats = db.cats ? `${db.cats} | ${nueva}` : nueva;
+            renderCategoriasEditor();
+        }
+
+        function eliminarCategoria(idx) {
+            if (confirm("¿Eliminar este grupo de categorías?")) {
+                const cats = db.cats.split('|').map(c => c.trim());
+                cats.splice(idx, 1);
+                db.cats = cats.join(' | ');
+                renderCategoriasEditor();
+            }
+        }
+
+        function updateCatName(idx, val) {
+            const cats = db.cats.split('|').map(c => c.trim());
+            const parts = cats[idx].split(':');
+            cats[idx] = `${val}: ${parts[1] || ""}`;
+            db.cats = cats.join(' | ');
+        }
+
+        function updateCatSubs(idx, val) {
+            const cats = db.cats.split('|').map(c => c.trim());
+            const parts = cats[idx].split(':');
+            cats[idx] = `${parts[0] || "Categoría"}: ${val}`;
+            db.cats = cats.join(' | ');
+        }
         function crearUsuario() {
             const u = document.getElementById('new-u').value;
             const p = document.getElementById('new-p').value;
@@ -1067,6 +1233,7 @@
 
             renderProductos();
             renderAsesores();
+            renderCategoriasEditor();
             actualizarListaUsuarios();
         }
 
