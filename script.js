@@ -131,13 +131,20 @@ document.addEventListener('DOMContentLoaded', () => {
         logoLink.addEventListener('click', (e) => {
             e.preventDefault();
             catBtns.forEach(b => b.classList.remove('active'));
-            // Reset Dropdown selection visual if needed
 
-            // Show all products
-            allProducts.forEach(p => {
+            // Show all current products
+            const currentProducts = document.querySelectorAll('.p-grid .p-card');
+            currentProducts.forEach(p => {
                 p.style.display = 'block';
                 setTimeout(() => p.style.opacity = '1', 10);
             });
+
+            // Clear search
+            if (searchInput) searchInput.value = '';
+            if (searchDropdown) {
+                searchDropdown.classList.remove('active');
+                searchDropdown.innerHTML = '';
+            }
         });
     }
 
@@ -145,49 +152,56 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. SEARCH & FILTER LOGIC
     // ---------------------------------------------------------
     const updateSearch = () => {
-        const query = searchInput.value.toLowerCase().trim();
-
-        allProducts.forEach(card => {
-            const title = card.querySelector('h3').textContent.toLowerCase();
-            const desc = card.getAttribute('data-description')?.toLowerCase() || "";
-            if (title.includes(query) || desc.includes(query)) {
-                card.style.display = 'block';
-                setTimeout(() => card.style.opacity = '1', 10);
-            } else {
-                card.style.opacity = '0';
-                setTimeout(() => card.style.display = 'none', 300);
-            }
-        });
+        const query = normalize(searchInput.value.trim());
+        const currentProducts = document.querySelectorAll('.p-grid .p-card');
 
         if (query.length === 0) {
+            currentProducts.forEach(card => {
+                card.style.display = 'block';
+                card.style.opacity = '1';
+            });
             searchDropdown.classList.remove('active');
             searchDropdown.innerHTML = '';
             return;
         }
 
         let matches = [];
-        allProducts.forEach(card => {
-            const title = card.querySelector('h3').textContent;
-            const price = (card.querySelector('.price-neon') || card.querySelector('.price')).textContent;
-            const imgSrc = card.querySelector('img').src;
-            if (title.toLowerCase().includes(query)) {
-                matches.push({ title, price, imgSrc, card });
+        currentProducts.forEach(card => {
+            const title = normalize(card.querySelector('h3').textContent);
+            const desc = normalize(card.getAttribute('data-description') || "");
+
+            if (title.includes(query) || desc.includes(query)) {
+                card.style.display = 'block';
+                setTimeout(() => card.style.opacity = '1', 10);
+
+                // Collect for dropdown
+                const rawTitle = card.querySelector('h3').textContent;
+                const price = (card.querySelector('.price-neon') || card.querySelector('.price'))?.textContent || "";
+                const imgSrc = card.querySelector('img').src;
+                matches.push({ title: rawTitle, price, imgSrc, card });
+            } else {
+                card.style.opacity = '0';
+                setTimeout(() => card.style.display = 'none', 300);
             }
         });
 
         if (matches.length > 0) {
             searchDropdown.innerHTML = '';
-            matches.forEach(item => {
+            matches.slice(0, 5).forEach(item => { // Limit to 5 results for cleaner UI
                 const resultItem = document.createElement('div');
                 resultItem.className = 'search-result-item';
-                resultItem.innerHTML = `<img src="${item.imgSrc}" alt="${item.title}">
+                resultItem.innerHTML = `
+                    <img src="${item.imgSrc}" alt="${item.title}">
                     <div class="search-result-info">
                         <span class="search-result-title">${item.title}</span>
                         <span class="search-result-price">${item.price}</span>
                     </div>`;
                 resultItem.addEventListener('click', () => {
-                    const detailBtn = item.card.querySelector('.open-product-detail');
-                    if (detailBtn) detailBtn.click();
+                    // Scroll to card or open detail
+                    item.card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    item.card.style.boxShadow = "0 0 30px var(--neon-gold)";
+                    setTimeout(() => item.card.style.boxShadow = "", 2000);
+
                     searchDropdown.classList.remove('active');
                     searchInput.value = '';
                 });
