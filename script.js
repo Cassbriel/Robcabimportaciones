@@ -393,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (config) {
                 db.hero = config.data.hero;
                 db.cats = config.data.cats;
+                if (config.data.asesores) db.asesores = config.data.asesores;
             }
 
             // 2. Cargar Productos

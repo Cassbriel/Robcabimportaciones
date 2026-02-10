@@ -1381,10 +1381,10 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sincronizando...';
 
             try {
-                // 1. Sincronizar Configuración (Hero, Cats)
+                // 1. Sincronizar Configuración (Hero, Cats, Asesores)
                 await supabaseAdmin.from('site_config').upsert({
                     id: 'robcab_settings',
-                    data: { hero: db.hero, cats: db.cats }
+                    data: { hero: db.hero, cats: db.cats, asesores: db.asesores }
                 });
 
                 // 2. Sincronizar Productos (Limpiar e insertar todos para simplicidad en este MVP)
@@ -1423,6 +1423,7 @@
                 if (config) {
                     db.hero = config.data.hero;
                     db.cats = config.data.cats;
+                    if (config.data.asesores) db.asesores = config.data.asesores;
                 }
 
                 const { data: prods } = await supabaseAdmin.from('products').select('*');
