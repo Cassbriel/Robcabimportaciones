@@ -422,6 +422,89 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
     // Toast Notification Helper
     // ---------------------------------------------------------
+    // ---------------------------------------------------------
+    // 6. PRODUCT DETAIL MODAL (MODERNO)
+    // ---------------------------------------------------------
+    function openProductModal(data) {
+        // Create modal overlay if not exists
+        let modal = document.getElementById('product-detail-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'product-detail-modal';
+            modal.className = 'product-detail-overlay';
+            modal.innerHTML = `
+                <div class="product-detail-card glass">
+                    <button class="modal-close-btn">&times;</button>
+                    <div class="modal-grid">
+                        <div class="modal-img-container">
+                            <img id="m-detail-img" src="" alt="Producto">
+                        </div>
+                        <div class="modal-info-container">
+                            <span class="m-detail-badge" id="m-detail-badge">NUEVO</span>
+                            <h2 id="m-detail-name">Nombre del Producto</h2>
+                            <p class="m-detail-price" id="m-detail-price">S/ 0.00</p>
+                            <div class="m-detail-desc-box">
+                                <h3>Descripción</h3>
+                                <p id="m-detail-desc">Cargando descripción...</p>
+                            </div>
+                            <div class="m-detail-actions">
+                                <a id="m-detail-wa" href="#" target="_blank" class="btn-wa">
+                                    <i class="fa-brands fa-whatsapp"></i> Consultar por WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Close events
+            modal.querySelector('.modal-close-btn').onclick = () => modal.classList.remove('active');
+            modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+        }
+
+        // Fill data
+        document.getElementById('m-detail-img').src = data.img;
+        document.getElementById('m-detail-name').textContent = data.name;
+        document.getElementById('m-detail-price').textContent = data.price;
+        document.getElementById('m-detail-desc').textContent = data.desc;
+
+        const badge = document.getElementById('m-detail-badge');
+        if (data.badge) {
+            badge.textContent = data.badge;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        // WhatsApp Link logic
+        const waLink = document.getElementById('m-detail-wa');
+        const firstNum = db.asesores && db.asesores.length > 0 ? db.asesores[0].num : "51900000001";
+        const message = `Hola! Estoy interesado en el producto: *${data.name}* (Precio: ${data.price}). Me gustaría recibir más información.`;
+        waLink.href = `https://wa.me/${firstNum}?text=${encodeURIComponent(message)}`;
+
+        // Show
+        modal.classList.add('active');
+    }
+
+    // Delegate click events to all products (including dynamic ones)
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest('.p-card');
+        if (!card) return;
+
+        // Si se hizo click en la imagen, el botón de detalles o el título
+        if (e.target.closest('.p-img-box') || e.target.classList.contains('open-product-detail') || e.target.tagName === 'H3') {
+            const data = {
+                name: card.querySelector('h3').textContent,
+                price: card.querySelector('.price-neon').textContent,
+                img: card.querySelector('img').src,
+                desc: card.getAttribute('data-description') || "Sin descripción disponible.",
+                badge: card.querySelector('.badge')?.textContent || ""
+            };
+            openProductModal(data);
+        }
+    });
+
     function showToast(title, message, type = 'info') {
         let container = document.getElementById('toast-container');
         if (!container) {
