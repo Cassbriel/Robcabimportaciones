@@ -566,50 +566,83 @@
                 height: 100vh;
                 transition: var(--transition);
                 box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+                display: flex !important;
+                /* Forzar visibilidad cuando no está oculto por lógica */
             }
 
             aside.mobile-active {
                 left: 0;
             }
 
+            aside.hidden {
+                display: none !important;
+            }
+
             main {
-                padding: 20px;
+                padding: 15px;
+                margin-top: 60px;
+                /* Espacio para el botón de menú */
             }
 
             .welcome-msg h1 {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
 
             .top-bar {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
+                align-items: stretch;
             }
 
             .top-actions {
-                width: 100%;
-                display: flex;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
 
             .top-actions button {
-                flex: 1;
-                font-size: 13px;
-                padding: 10px;
+                padding: 12px;
+                font-size: 12px;
+                justify-content: center;
             }
 
             .grid-two,
             .prod-form-grid,
             .hero-editor-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
             .inventory-controls {
                 flex-direction: column;
+                gap: 10px;
             }
 
             .modal-card {
                 width: 95%;
+                margin: 10px;
+                max-height: 85vh;
             }
+
+            /* Agrandar inputs en móvil */
+            input,
+            textarea,
+            select {
+                font-size: 16px;
+                /* Evitar zoom en iOS */
+                padding: 12px;
+            }
+
+            .hide-mobile {
+                display: none !important;
+            }
+
+            .icon-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            /* Tamaño mínimo para dedos */
         }
 
         #menu-toggle {
@@ -1202,16 +1235,33 @@
 
             container.innerHTML = categoriasArr.map((cat, idx) => `
                 <div class="cat-item-editor" draggable="true" data-index="${idx}" ondragstart="handleDragStart(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragend="handleDragEnd(event)">
-                    <div class="cat-handle"><i class="fas fa-grip-vertical"></i></div>
-                    <div style="display:flex; flex-direction:column; flex-grow:1;">
-                        <input class="cat-name-input" value="${cat.name}" onchange="updateCatName(${idx}, this.value)" placeholder="Nombre del Grupo">
-                        <input style="font-size:0.75rem; color:var(--text-dim); background:transparent; border:none; padding:5px;" value="${cat.subs}" onchange="updateCatSubs(${idx}, this.value)" placeholder="Subcategorías (separadas por coma)">
+                    <div class="cat-handle hide-mobile"><i class="fas fa-grip-vertical"></i></div>
+                    <div style="display:flex; flex-direction:column; flex-grow:1; gap:5px;">
+                        <input class="cat-name-input" value="${cat.name}" oninput="updateCatName(${idx}, this.value)" placeholder="Nombre del Grupo">
+                        <textarea style="font-size:0.75rem; color:var(--text-dim); background:transparent; border:none; padding:5px; resize:none;" rows="2" oninput="updateCatSubs(${idx}, this.value)" placeholder="Subcategorías (separadas por coma)">${cat.subs}</textarea>
                     </div>
-                    <div class="cat-actions">
-                        <button class="icon-btn del" onclick="eliminarCategoria(${idx})"><i class="fas fa-trash-can"></i></button>
+                    <div class="cat-actions" style="display:flex; flex-direction:column; gap:5px;">
+                        <div style="display:flex; gap:5px;">
+                            <button class="icon-btn" onclick="moverCategoria(${idx}, -1)"><i class="fas fa-chevron-up"></i></button>
+                            <button class="icon-btn" onclick="moverCategoria(${idx}, 1)"><i class="fas fa-chevron-down"></i></button>
+                        </div>
+                        <button class="icon-btn del" style="width:100%" onclick="eliminarCategoria(${idx})"><i class="fas fa-trash-can"></i></button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function moverCategoria(idx, dir) {
+            const cats = db.cats.split('|').map(c => c.trim());
+            const target = idx + dir;
+            if (target >= 0 && target < cats.length) {
+                const temp = cats[idx];
+                cats[idx] = cats[target];
+                cats[target] = temp;
+                db.cats = cats.join(' | ');
+                renderCategoriasEditor();
+                document.getElementById('m-cats').value = db.cats.split('|').map(c => c.trim()).join('\n');
+            }
         }
 
         let dragSrcIndex = null;
@@ -1267,7 +1317,7 @@
 
         function updateCatSubs(idx, val) {
             const cats = db.cats.split('|').map(c => c.trim());
-            const parts = cats[idx].split(':');
+            const parts = (cats[idx] || "").split(':');
             cats[idx] = `${parts[0] || "Categoría"}: ${val}`;
             db.cats = cats.join(' | ');
             document.getElementById('m-cats').value = db.cats.split('|').map(c => c.trim()).join('\n');
