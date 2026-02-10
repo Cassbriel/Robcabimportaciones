@@ -841,11 +841,11 @@
         // CONFIGURACIÓN SUPABASE
         const SUPABASE_URL = 'https://ernfxavvwhduvkutjdau.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_ZxOiNqLYGpUlcyVqUsVFqQ_27NTzG5C';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseAdmin = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // BASE DE DATOS LOCAL (Cache/Fallback)
         let db = JSON.parse(localStorage.getItem('robcab_final')) || {
-            hero: { title: "Robcab Importaciones", sub: "Garantía Maestra", img: "" },
+            hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "" },
             products: [],
             asesores: [
                 { nom: "Asesor Ventas 1", num: "51900000001" },
@@ -856,8 +856,9 @@
             users: [{ u: "admin", p: "1234", r: "Admin" }]
         };
 
-        // Si es una versión vieja, migrar productos
+        // Si es una versión vieja, migrar productos y usuarios
         if (!db.products) db.products = [];
+        if (!db.users) db.users = [{ u: "admin", p: "1234", r: "Admin" }];
 
         function ingresar() {
             const uInput = document.getElementById('u').value;
@@ -1084,16 +1085,16 @@
 
             try {
                 // 1. Sincronizar Configuración (Hero, Cats)
-                await supabase.from('site_config').upsert({
+                await supabaseAdmin.from('site_config').upsert({
                     id: 'robcab_settings',
                     data: { hero: db.hero, cats: db.cats }
                 });
 
                 // 2. Sincronizar Productos (Limpiar e insertar todos para simplicidad en este MVP)
                 // En una app real usaríamos deltas, pero para este catálogo pequeño esto es seguro.
-                await supabase.from('products').delete().neq('id', '0'); // Limpiar
+                await supabaseAdmin.from('products').delete().neq('id', '0'); // Limpiar
                 if (db.products.length > 0) {
-                    await supabase.from('products').insert(db.products.map(p => ({
+                    await supabaseAdmin.from('products').insert(db.products.map(p => ({
                         id: p.id,
                         name: p.name,
                         cat: p.cat,
@@ -1121,13 +1122,13 @@
         // CARGAR DESDE LA NUBE AL INICIAR
         async function syncFromCloud() {
             try {
-                const { data: config } = await supabase.from('site_config').select('data').eq('id', 'robcab_settings').single();
+                const { data: config } = await supabaseAdmin.from('site_config').select('data').eq('id', 'robcab_settings').single();
                 if (config) {
                     db.hero = config.data.hero;
                     db.cats = config.data.cats;
                 }
 
-                const { data: prods } = await supabase.from('products').select('*');
+                const { data: prods } = await supabaseAdmin.from('products').select('*');
                 if (prods) {
                     db.products = prods.map(p => ({
                         id: p.id,

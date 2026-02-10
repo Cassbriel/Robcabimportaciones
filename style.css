@@ -79,10 +79,10 @@ body {
 }
 
 .navbar .container {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 40px;
+    gap: 15px;
 }
 
 @media (max-width: 1100px) {
@@ -426,15 +426,17 @@ body {
 
 /* --- Hero Section - Video/Glow Effect --- */
 .hero {
-    min-height: 85vh;
+    min-height: 80vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Move content up */
     justify-content: center;
     text-align: center;
     background: radial-gradient(circle at center, rgba(61, 43, 31, 0.8) 0%, rgba(5, 5, 5, 1) 100%);
     position: relative;
     overflow: hidden;
-    padding: 80px 0;
+    padding: 60px 0;
+    /* Reduced top padding */
 }
 
 .hero::before {
@@ -850,19 +852,25 @@ body {
         /* Base font reduction */
     }
 
-    /* Hero Section Compact */
+    /* Hero Section Compact - MODIFIED to delete space */
     .hero {
-        padding-top: 100px;
+        padding-top: 20px;
+        /* Even less space */
         min-height: 50vh;
-        /* Shorter hero */
-        padding-bottom: 30px;
+        padding-bottom: 20px;
+        align-items: flex-start;
+    }
+
+    .hero-box {
+        margin-top: 0;
+        padding-top: 0;
     }
 
     .hero-box h2 {
-        font-size: 2.2rem;
-        /* Much smaller hero text */
+        font-size: 2.8rem;
+        /* Slightly larger for impact */
         letter-spacing: -1px;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .hero-box p {
@@ -917,6 +925,48 @@ body {
         font-size: 0.75rem;
         width: 100%;
         text-align: center;
+    }
+
+    /* Navbar Row Alignment */
+    .navbar .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        /* Logo left, actions right */
+        align-items: center;
+        padding: 10px 15px;
+    }
+
+    .logo-link {
+        order: 1;
+        flex: 0 1 auto;
+    }
+
+    .logo-text-wrapper {
+        font-size: 1.2rem;
+    }
+
+    .logo-text-wrapper span {
+        font-size: 0.7rem;
+    }
+
+    .category-dropdown-container {
+        order: 2;
+        margin: 0;
+        flex: 0 1 auto;
+    }
+
+    .dropdown-btn {
+        padding: 4px 12px;
+        font-size: 0.6rem;
+        height: 28px;
+    }
+
+    .search-container {
+        order: 3;
+        flex: 1 1 100%;
+        /* Full width below */
+        margin-top: 10px;
     }
 
     /* Footer / Asesor Button Compact */

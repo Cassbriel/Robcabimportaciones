@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // BASE DE DATOS LOCAL (Cache/Fallback)
     // Estructura nueva: { hero: {title, sub, img}, asesores: [{nom, num}...], cats: "...", users: [...] }
     let db = JSON.parse(localStorage.getItem('robcab_final')) || {
-        hero: { title: "Robcab Importaciones", sub: "Garantía Maestra", img: "" },
+        hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "" },
         asesores: [
             { nom: "Asesor Ventas 1", num: "51900000001" },
             { nom: "Asesor Ventas 2", num: "51900000002" },
@@ -244,7 +244,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.querySelector('.p-grid');
         if (!grid || !db.products || db.products.length === 0) return;
 
-        grid.innerHTML = db.products.map(p => `
+        const isCategoryPage = window.location.pathname.includes('category.html');
+        let productsToShow = db.products;
+
+        // Si es la página principal (Home), solo mostrar Packs
+        if (!isCategoryPage) {
+            productsToShow = db.products.filter(p => p.cat.toLowerCase().includes('pack'));
+
+            // Opcional: Cambiar el título de la sección si existe
+            const sectionHeader = document.querySelector('.products .section-header h2');
+            if (sectionHeader) sectionHeader.textContent = "Packs en Oferta";
+        }
+
+        grid.innerHTML = productsToShow.map(p => `
             <div class="p-card" data-cat="${p.cat.toLowerCase()}" data-description="${p.desc}">
                 <div class="p-content">
                     <div class="p-img-box">
