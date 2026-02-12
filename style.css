@@ -66,23 +66,80 @@ body {
     }
 }
 
+/* --- Top Announcement Bar --- */
+.top-announcement {
+    background: linear-gradient(90deg, rgba(255, 179, 0, 0.15), rgba(255, 204, 51, 0.1), rgba(255, 179, 0, 0.15));
+    backdrop-filter: blur(10px);
+    padding: 10px 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--neon-gold);
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 179, 0, 0.1);
+    z-index: 1001;
+}
+
+.announcement-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* --- Scroll Progress Bar --- */
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 1002;
+    background: transparent;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--neon-gold), var(--gold-glow), var(--home-orange));
+    transition: width 0.1s ease;
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
+}
+
 /* --- Navigation & Glowing Header --- */
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
 .navbar {
-    background: rgba(5, 5, 5, 0.95);
+    background: rgba(5, 5, 5, 0.4);
     backdrop-filter: blur(20px);
-    padding: 20px 0;
-    border-bottom: 2px solid var(--luxury-brown);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 15px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
     transition: var(--transition);
+    border-bottom: 1px solid rgba(255, 179, 0, 0.08);
+}
+
+.navbar.scrolled {
+    background: rgba(5, 5, 5, 0.85);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-bottom: 1px solid rgba(255, 179, 0, 0.15);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    padding: 10px 0;
 }
 
 .navbar .container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 @media (max-width: 1100px) {
@@ -90,7 +147,7 @@ body {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
+        gap: 12px;
     }
 }
 
@@ -426,17 +483,19 @@ body {
 
 /* --- Hero Section - Video/Glow Effect --- */
 .hero {
-    min-height: 80vh;
+    min-height: 55vh;
     display: flex;
-    align-items: flex-start;
-    /* Move content up */
+    align-items: center;
     justify-content: center;
     text-align: center;
-    background: radial-gradient(circle at center, rgba(61, 43, 31, 0.8) 0%, rgba(5, 5, 5, 1) 100%);
+    background: transparent;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
-    padding: 60px 0;
-    /* Reduced top padding */
+    padding: 40px 5% 40px;
+    margin-top: 0;
 }
 
 .hero::before {
@@ -446,7 +505,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+    background: transparent;
     opacity: 0.2;
 }
 
@@ -454,6 +513,8 @@ body {
     z-index: 2;
     animation: fadeIn 1.5s ease;
     max-width: 900px;
+    margin: 0 auto;
+    background: transparent !important;
 }
 
 .hero-box h2 {
@@ -474,12 +535,134 @@ body {
 }
 
 /* --- Neon Product Cards --- */
+.products {
+    padding: 60px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: var(--gold-glow);
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+/* --- Footer --- */
+.site-footer {
+    background: var(--deep-black);
+    border-top: 1px solid var(--luxury-brown);
+    margin-top: 60px;
+}
+
+.footer-content {
+    padding: 60px 5%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.footer-logo-text {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.footer-desc {
+    opacity: 0.6;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.footer-links h3,
+.footer-contact h3 {
+    margin-bottom: 20px;
+    color: var(--gold-glow);
+    font-size: 1.1rem;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+    color: var(--neon-gold);
+    padding-left: 5px;
+}
+
+.footer-contact p {
+    color: #aaa;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.footer-contact i {
+    color: var(--neon-gold);
+    margin-right: 8px;
+    width: 16px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    color: #888;
+    font-size: 1.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--neon-gold);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 20px;
+    background: #000;
+    border-top: 1px solid #111;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.footer-bottom .admin-link {
+    color: #333;
+    font-size: 10px;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom .admin-link:hover {
+    color: #666;
+}
+
 .p-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 40px;
-    padding: 50px 8%;
+    padding: 30px 0;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .p-card {
@@ -799,15 +982,16 @@ body {
 
     /* Navbar Adjustment */
     .navbar {
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 10px 15px;
-        /* Reduced Padding */
+        padding: 10px 0;
+    }
+
+    .navbar .container {
+        padding: 0 15px;
+        justify-content: center;
     }
 
     .logo-link h1 {
         font-size: 1.3rem;
-        /* Smaller Logo */
         letter-spacing: 2px;
     }
 
@@ -819,7 +1003,6 @@ body {
 
     .dropdown-btn {
         padding: 6px 14px;
-        /* Smaller button */
         font-size: 0.7rem;
         gap: 6px;
     }
@@ -833,14 +1016,29 @@ body {
 
     .search-container input {
         padding: 10px 20px;
-        /* Reduced height */
         font-size: 0.9rem;
-        /* Smaller text */
     }
 
     .nav-actions {
         order: 2;
         gap: 10px;
+    }
+
+    .hero {
+        min-height: 40vh;
+        padding: 30px 5% 30px;
+    }
+
+    /* Footer mobile */
+    .footer-content {
+        padding: 40px 5%;
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .social-icons {
+        justify-content: center;
     }
 }
 
@@ -849,16 +1047,13 @@ body {
     /* General Scaledown for Mobile */
     body {
         font-size: 14px;
-        /* Base font reduction */
     }
 
-    /* Hero Section Compact - MODIFIED to delete space */
+    /* Hero Section Compact */
     .hero {
-        padding-top: 20px;
-        /* Even less space */
-        min-height: 50vh;
-        padding-bottom: 20px;
-        align-items: flex-start;
+        min-height: 35vh;
+        padding: 25px 5% 25px;
+        align-items: center;
     }
 
     .hero-box {
@@ -868,7 +1063,6 @@ body {
 
     .hero-box h2 {
         font-size: 2.8rem;
-        /* Slightly larger for impact */
         letter-spacing: -1px;
         margin-bottom: 10px;
     }
@@ -931,10 +1125,9 @@ body {
     .navbar .container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        /* Logo left, actions right */
+        justify-content: center;
         align-items: center;
-        padding: 10px 15px;
+        padding: 8px 12px;
     }
 
     .logo-link {
@@ -988,7 +1181,22 @@ body {
     /* Section Headers */
     .section-header h2 {
         font-size: 1.8rem !important;
-        /* Force smaller header */
+    }
+
+    /* Footer Mobile */
+    .footer-content {
+        padding: 30px 15px;
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 25px;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+
+    .footer-bottom {
+        padding: 15px 10px;
     }
 
     /* --- Category Dropdown Mobile Optimization --- */

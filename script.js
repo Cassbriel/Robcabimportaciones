@@ -1,5 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------------------------------------
+    // 0. NAVBAR SCROLL EFFECT & PROGRESS BAR
+    // ---------------------------------------------------------
+    const navbar = document.querySelector('.navbar');
+    const scrollBar = document.getElementById('scroll-bar');
+
+    window.addEventListener('scroll', () => {
+        // Navbar glassmorphism on scroll
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        // Scroll progress bar
+        if (scrollBar) {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollBar.style.width = scrollPercent + '%';
+        }
+    });
+
+    // ---------------------------------------------------------
     // 1. GLOBAL STATE & SELECTORS
     // ---------------------------------------------------------
     const searchInput = document.getElementById('main-search-input');
