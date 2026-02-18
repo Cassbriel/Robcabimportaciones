@@ -667,6 +667,135 @@
                 display: flex;
             }
         }
+
+        /* IMAGE EDITOR */
+        .img-editor-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-editor-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-premium);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .img-editor-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .img-editor-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .img-editor-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            background: #000;
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .img-editor-canvas-wrap:active {
+            cursor: grabbing;
+        }
+
+        .img-editor-canvas-wrap img {
+            position: absolute;
+            transform-origin: 0 0;
+            pointer-events: none;
+            max-width: none;
+        }
+
+        .crop-guide {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            border: 2px solid rgba(255, 180, 0, 0.4);
+        }
+
+        .img-editor-controls {
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-top: 1px solid var(--glass-border);
+            flex-wrap: wrap;
+        }
+
+        .img-editor-controls .ctrl {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .img-editor-controls label {
+            margin: 0;
+            text-transform: none;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .img-editor-controls input[type="range"] {
+            width: 160px;
+            padding: 0;
+            accent-color: var(--primary);
+            background: transparent;
+            border: none;
+        }
+
+        .zoom-val {
+            min-width: 42px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .img-editor-footer {
+            padding: 18px 30px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        @media(max-width:1024px) {
+            .img-editor-canvas-wrap {
+                height: 280px;
+            }
+
+            .img-editor-controls {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .img-editor-controls input[type="range"] {
+                width: 110px;
+            }
+        }
     </style>
 </head>
 
@@ -754,6 +883,11 @@
                             <label>Frase Inspiracional / Subtítulo</label>
                             <textarea id="h-sub" placeholder="Ej: Garantía Maestra en cada producto" rows="3"
                                 oninput="document.getElementById('prev-h-sub').innerText = this.value"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Aviso Superior (Barra Amarilla)</label>
+                            <input type="text" id="h-announcement"
+                                placeholder="Ej: ENVÍO A TODO EL PERÚ — GARANTÍA MAESTRA">
                         </div>
                     </div>
                 </div>
@@ -1024,6 +1158,49 @@
         </div>
     </div>
 
+    <!-- MODAL EDITOR DE IMAGEN -->
+    <div id="img-editor-modal" class="img-editor-overlay hidden">
+        <div class="img-editor-card">
+            <div class="img-editor-header">
+                <h3><i class="fas fa-crop-simple"></i> Ajustar Imagen</h3>
+                <button class="close-btn" onclick="cerrarEditor()">&times;</button>
+            </div>
+            <div class="img-editor-canvas-wrap" id="editor-canvas-wrap">
+                <img id="editor-img" src="" draggable="false">
+                <div class="crop-guide"></div>
+            </div>
+            <div class="img-editor-controls">
+                <div class="ctrl">
+                    <i class="fas fa-search-minus" style="color:var(--text-dim)"></i>
+                    <input type="range" id="editor-zoom" min="10" max="300" value="100"
+                        oninput="editorUpdateZoom(this.value)">
+                    <i class="fas fa-search-plus" style="color:var(--text-dim)"></i>
+                    <span class="zoom-val" id="editor-zoom-val">100%</span>
+                </div>
+                <div class="ctrl">
+                    <button class="icon-btn" onclick="editorRotate(-90)" title="Rotar"><i
+                            class="fas fa-rotate-left"></i></button>
+                    <button class="icon-btn" onclick="editorRotate(90)" title="Rotar"><i
+                            class="fas fa-rotate-right"></i></button>
+                </div>
+                <div class="ctrl">
+                    <button class="icon-btn" onclick="editorFlip('h')" title="Voltear H"><i
+                            class="fas fa-arrows-left-right"></i></button>
+                    <button class="icon-btn" onclick="editorFlip('v')" title="Voltear V"><i
+                            class="fas fa-arrows-up-down"></i></button>
+                </div>
+                <div class="ctrl" style="margin-left:auto">
+                    <button class="icon-btn" onclick="editorReset()" title="Resetear"><i
+                            class="fas fa-undo"></i></button>
+                </div>
+            </div>
+            <div class="img-editor-footer">
+                <button class="btn-main secondary" onclick="cerrarEditor()">Cancelar</button>
+                <button class="btn-main" onclick="aplicarEditor()"><i class="fas fa-check"></i> Aplicar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // CONFIGURACIÓN SUPABASE
         const SUPABASE_URL = 'https://ernfxavvwhduvkutjdau.supabase.co';
@@ -1032,7 +1209,7 @@
 
         // BASE DE DATOS LOCAL (Cache/Fallback)
         let db = JSON.parse(localStorage.getItem('robcab_final')) || {
-            hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "" },
+            hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "", announcement: "ENVÍO A TODO EL PERÚ — GARANTÍA MAESTRA EN CADA PRODUCTO" },
             products: [],
             asesores: [
                 { nom: "Asesor Ventas 1", num: "51900000001" },
@@ -1091,12 +1268,17 @@
 
         // --- GESTIÓN DE PORTADA ---
         function previewImage(input, previewId, dbKey) {
+            if (!input.files[0]) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                db.hero.img = e.target.result;
-                document.getElementById('hero-bg-preview').style.backgroundImage = `url(${e.target.result})`;
+                // Relación de aspecto para Portada (aproximadamente 2.8:1 basado en 55vh)
+                openImageEditor(e.target.result, 2.8, (result) => {
+                    db.hero.img = result;
+                    document.getElementById('hero-bg-preview').style.backgroundImage = `url(${result})`;
+                });
             };
             reader.readAsDataURL(input.files[0]);
+            input.value = '';
         }
 
         // --- GESTIÓN DE PRODUCTOS (INVENTARIO) ---
@@ -1153,9 +1335,16 @@
         }
 
         function previewProductImg(input) {
+            if (!input.files[0]) return;
             const reader = new FileReader();
-            reader.onload = (e) => document.getElementById('p-preview').src = e.target.result;
+            reader.onload = (e) => {
+                // Relación de aspecto para Productos (casi cuadrado, 1.2:1)
+                openImageEditor(e.target.result, 1.2, (result) => {
+                    document.getElementById('p-preview').src = result;
+                });
+            };
             reader.readAsDataURL(input.files[0]);
+            input.value = '';
         }
 
         function guardarProducto() {
@@ -1354,6 +1543,7 @@
         function cargarUI() {
             document.getElementById('h-title').value = db.hero.title;
             document.getElementById('h-sub').value = db.hero.sub;
+            document.getElementById('h-announcement').value = db.hero.announcement || "";
             document.getElementById('prev-h-title').innerText = db.hero.title;
             document.getElementById('prev-h-sub').innerText = db.hero.sub;
             if (db.hero.img) document.getElementById('hero-bg-preview').style.backgroundImage = `url(${db.hero.img})`;
@@ -1370,6 +1560,7 @@
         async function guardarTodo() {
             db.hero.title = document.getElementById('h-title').value;
             db.hero.sub = document.getElementById('h-sub').value;
+            db.hero.announcement = document.getElementById('h-announcement').value;
             // No sincronizamos db.cats aquí desde m-cats porque ya se hace en aplicarTextoCategorias o updateCatName
 
             // Guardar en LocalStorage (Cache FAST)
@@ -1525,6 +1716,171 @@
                 }
             });
         });
+
+        // ========== IMAGE EDITOR ==========
+        const _ed = { src: '', x: 0, y: 0, zoom: 100, rot: 0, fH: false, fV: false, drag: false, sx: 0, sy: 0, cb: null, nw: 0, nh: 0, ratio: 1 };
+
+        function openImageEditor(imgSrc, aspect, callback) {
+            Object.assign(_ed, { src: imgSrc, cb: callback, zoom: 100, rot: 0, fH: false, fV: false, x: 0, y: 0, drag: false, ratio: aspect || 1 });
+            const modal = document.getElementById('img-editor-modal');
+            const img = document.getElementById('editor-img');
+            const wrap = document.getElementById('editor-canvas-wrap');
+            const guide = wrap.querySelector('.crop-guide');
+
+            // Mostrar el modal primero para obtener dimensiones reales
+            modal.classList.remove('hidden');
+
+            // Ajustar guía de recorte según el aspecto
+            let gw, gh;
+            const wrapW = wrap.clientWidth;
+            const wrapH = wrap.clientHeight;
+            const wrapRatio = wrapW / wrapH;
+
+            if (wrapRatio > _ed.ratio) {
+                gh = wrapH * 0.8;
+                gw = gh * _ed.ratio;
+            } else {
+                gw = wrapW * 0.8;
+                gh = gw / _ed.ratio;
+            }
+
+            guide.style.width = gw + 'px';
+            guide.style.height = gh + 'px';
+            // Guardar dimensiones en el objeto para aplicar recorte después
+            _ed.gw = gw; _ed.gh = gh;
+            _ed.gl = (wrapW - gw) / 2;
+            _ed.gt = (wrapH - gh) / 2;
+
+            guide.style.left = _ed.gl + 'px';
+            guide.style.top = _ed.gt + 'px';
+            guide.style.border = "3px solid var(--primary)";
+            guide.style.boxShadow = "0 0 0 5000px rgba(0,0,0,0.7)";
+
+            document.getElementById('editor-zoom').value = 100;
+            document.getElementById('editor-zoom-val').textContent = '100%';
+
+            const tmp = new Image();
+            tmp.onload = function () {
+                _ed.nw = tmp.naturalWidth;
+                _ed.nh = tmp.naturalHeight;
+                img.src = imgSrc;
+
+                // Esperar un momento a que el DOM se actualice
+                setTimeout(() => {
+                    const fs = Math.max(gw / _ed.nw, gh / _ed.nh);
+                    _ed.zoom = Math.round(fs * 100);
+                    document.getElementById('editor-zoom').value = _ed.zoom;
+                    document.getElementById('editor-zoom-val').textContent = _ed.zoom + '%';
+
+                    // Centrar imagen respecto a la GUÍA
+                    _ed.x = _ed.gl + (gw - _ed.nw * fs) / 2;
+                    _ed.y = _ed.gt + (gh - _ed.nh * fs) / 2;
+                    _edTransform();
+                }, 50);
+            };
+            tmp.src = imgSrc;
+
+            wrap.onmousedown = _edDown; wrap.onmousemove = _edMove;
+            wrap.onmouseup = _edUp; wrap.onmouseleave = _edUp;
+            wrap.ontouchstart = (e) => { if (e.touches.length === 1) _edDown(e); };
+            wrap.ontouchmove = (e) => { if (e.touches.length === 1) _edMove(e); };
+            wrap.ontouchend = _edUp;
+            wrap.onwheel = _edWheel;
+        }
+
+        function _edTransform() {
+            const img = document.getElementById('editor-img');
+            const s = _ed.zoom / 100;
+            let tx = _ed.x, ty = _ed.y;
+            if (_ed.fH) tx += _ed.nw * s;
+            if (_ed.fV) ty += _ed.nh * s;
+            const sx = _ed.fH ? -s : s, sy = _ed.fV ? -s : s;
+            img.style.position = 'absolute'; img.style.left = '0'; img.style.top = '0';
+            img.style.transformOrigin = '0 0';
+            img.style.transform = `translate(${tx}px,${ty}px) scale(${sx},${sy}) rotate(${_ed.rot}deg)`;
+        }
+
+        function _edDown(e) {
+            e.preventDefault(); _ed.drag = true;
+            const cx = e.clientX ?? e.touches[0].clientX;
+            const cy = e.clientY ?? e.touches[0].clientY;
+            _ed.sx = cx - _ed.x; _ed.sy = cy - _ed.y;
+        }
+        function _edMove(e) {
+            if (!_ed.drag) return; e.preventDefault();
+            const cx = e.clientX ?? e.touches?.[0]?.clientX;
+            const cy = e.clientY ?? e.touches?.[0]?.clientY;
+            if (cx == null) return;
+            _ed.x = cx - _ed.sx; _ed.y = cy - _ed.sy;
+            _edTransform();
+        }
+        function _edUp() { _ed.drag = false; }
+
+        function editorUpdateZoom(val) {
+            const w = document.getElementById('editor-canvas-wrap');
+            const cx = w.clientWidth / 2, cy = w.clientHeight / 2;
+            const os = _ed.zoom / 100, ns = val / 100, r = ns / os;
+            _ed.x = cx - (cx - _ed.x) * r; _ed.y = cy - (cy - _ed.y) * r;
+            _ed.zoom = parseInt(val);
+            document.getElementById('editor-zoom-val').textContent = _ed.zoom + '%';
+            _edTransform();
+        }
+        function _edWheel(e) {
+            e.preventDefault();
+            const nz = Math.max(10, Math.min(300, _ed.zoom + (e.deltaY > 0 ? -5 : 5)));
+            document.getElementById('editor-zoom').value = nz;
+            editorUpdateZoom(nz);
+        }
+        function editorRotate(d) { _ed.rot = (_ed.rot + d) % 360; _edTransform(); }
+        function editorFlip(a) { if (a === 'h') _ed.fH = !_ed.fH; else _ed.fV = !_ed.fV; _edTransform(); }
+        function editorReset() {
+            const w = document.getElementById('editor-canvas-wrap');
+            const guide = w.querySelector('.crop-guide');
+            const gw = parseFloat(guide.style.width), gh = parseFloat(guide.style.height);
+            const fs = Math.max(gw / _ed.nw, gh / _ed.nh);
+            _ed.zoom = Math.round(fs * 100); _ed.rot = 0; _ed.fH = false; _ed.fV = false;
+            _ed.x = (w.clientWidth - _ed.nw * fs) / 2; _ed.y = (w.clientHeight - _ed.nh * fs) / 2;
+            document.getElementById('editor-zoom').value = _ed.zoom;
+            document.getElementById('editor-zoom-val').textContent = _ed.zoom + '%';
+            _edTransform();
+        }
+        function cerrarEditor() { document.getElementById('img-editor-modal').classList.add('hidden'); }
+        function aplicarEditor() {
+            const img = document.getElementById('editor-img');
+            if (!img.src || img.src.includes('data:,')) return cerrarEditor();
+
+            const c = document.createElement('canvas');
+            const ctx = c.getContext('2d');
+
+            c.width = _ed.gw;
+            c.height = _ed.gh;
+
+            const s = _ed.zoom / 100;
+
+            ctx.save();
+            // Muy importante: restar la posición de la guía para que el recorte sea exacto
+            ctx.translate(-_ed.gl, -_ed.gt);
+
+            let tx = _ed.x, ty = _ed.y;
+            if (_ed.fH) tx += _ed.nw * s;
+            if (_ed.fV) ty += _ed.nh * s;
+
+            ctx.translate(tx, ty);
+            ctx.scale(_ed.fH ? -s : s, _ed.fV ? -s : s);
+
+            if (_ed.rot !== 0) {
+                ctx.translate(_ed.nw / 2, _ed.nh / 2);
+                ctx.rotate(_ed.rot * Math.PI / 180);
+                ctx.translate(-_ed.nw / 2, -_ed.nh / 2);
+            }
+
+            ctx.drawImage(img, 0, 0);
+            ctx.restore();
+
+            const result = c.toDataURL('image/jpeg', 0.85);
+            if (_ed.cb) _ed.cb(result);
+            cerrarEditor();
+        }
     </script>
 </body>
 

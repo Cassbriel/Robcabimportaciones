@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // BASE DE DATOS LOCAL (Cache/Fallback)
     // Estructura nueva: { hero: {title, sub, img}, asesores: [{nom, num}...], cats: "...", users: [...] }
     let db = JSON.parse(localStorage.getItem('robcab_final')) || {
-        hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "" },
+        hero: { title: "ROBCAB 2026", sub: "Garantía Maestra", img: "", announcement: "ENVÍO A TODO EL PERÚ — GARANTÍA MAESTRA EN CADA PRODUCTO" },
         asesores: [
             { nom: "Asesor Ventas 1", num: "51900000001" },
             { nom: "Asesor Ventas 2", num: "51900000002" },
@@ -339,6 +339,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (heroTitle && db.hero && db.hero.title) heroTitle.textContent = db.hero.title;
         if (heroSub && db.hero && db.hero.sub) heroSub.textContent = db.hero.sub;
+
+        // Actualizar Barra de Anuncio
+        const announcementContent = document.getElementById('announcement-content');
+        if (announcementContent && db.hero && db.hero.announcement) {
+            announcementContent.innerHTML = `<i class="fa-solid fa-bolt"></i> ${db.hero.announcement}`;
+        }
+
         if (heroSection && db.hero && db.hero.img && db.hero.img.length > 5) {
             heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${db.hero.img}')`;
             heroSection.style.backgroundSize = 'cover';
@@ -493,7 +500,36 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('m-detail-img').src = data.img;
         document.getElementById('m-detail-name').textContent = data.name;
         document.getElementById('m-detail-price').textContent = data.price;
-        document.getElementById('m-detail-desc').textContent = data.desc;
+
+        const descContainer = document.getElementById('m-detail-desc');
+        const rawDesc = data.desc || "";
+
+        // Intelligent parsing for improved order/symmetry
+        if (rawDesc.includes('✅') || rawDesc.includes('🚨') || rawDesc.includes('🔥') || rawDesc.includes('INCLUYE')) {
+            let cleanDesc = rawDesc;
+            // If it starts with "INCLUYE:", separate it
+            let header = "";
+            if (cleanDesc.toUpperCase().includes('INCLUYE:')) {
+                const parts = cleanDesc.split(/INCLUYE:/i);
+                header = "INCLUYE:";
+                cleanDesc = parts[1] || parts[0];
+            }
+
+            // Split by emojis or specific patterns
+            const items = cleanDesc.split(/(?=✅|🚨|🔥|📦|☎️|📹)/).map(i => i.trim()).filter(i => i.length > 0);
+
+            let html = header ? `<div style="font-weight: 800; color: #fff; margin-bottom: 10px;">${header}</div>` : "";
+            html += items.map(item => `
+                <div class="m-detail-desc-item">
+                    <i class="fa-solid fa-check-circle" style="display:none;"></i> 
+                    <span>${item}</span>
+                </div>
+            `).join('');
+
+            descContainer.innerHTML = html;
+        } else {
+            descContainer.textContent = rawDesc;
+        }
 
         const badge = document.getElementById('m-detail-badge');
         if (data.badge) {
